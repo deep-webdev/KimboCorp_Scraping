@@ -1,5 +1,19 @@
 from django.db import models
 
+class Extracted(models.Model):
+    product_name = models.TextField()
+    price_usd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
+    weight = models.CharField(max_length=10)
+    product_id = models.CharField(max_length=10)
+    metal_content = models.CharField(max_length=20)
+    purity = models.CharField(max_length=10)
+    manufacture = models.CharField(max_length=20)
+    product_url = models.CharField(max_length=50)
+    supplier_name = models.CharField(max_length=20)
+    supplier_country = models.CharField(max_length=20)
+
 # Create your models here.
 class Kitco(models.Model):
     product_name = models.TextField()
