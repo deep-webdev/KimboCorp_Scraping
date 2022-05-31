@@ -282,38 +282,40 @@ def acheter():
 
 
 def main_update():
-    df_final = pd.DataFrame([apmex('https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints'),jmbullion(),achat(),bullionstar(),indigopreciousmetals(),sdbullion(), goldcentral(),kitco(),silverbullion(), acheter()])
-    cols = df_final.columns.tolist()
-    cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12]
-    df_final = df_final[cols]
-    df_final.fillna('NA',inplace=True)
-    df_final['Price'] = df_final['Price'].replace(' ',0)
-    df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
-    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
-    df_final['Price'] = df_final['Price'].astype(float).astype(int)
-    df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
-    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
-    df_final['Price'] = df_final['Price'].replace(0,'NA')
-    df_final['Crypto Price'] = df_final['Crypto Price'].replace(0,'NA')
-    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0,'NA')
-    df_records = df_final.to_dict('records')
-    print(df_final.keys())
-    model_instances = [Extracted(
-        product_name=record['Product Name'],
-        price_usd=record['Price'],
-        crypto_price=record['Crypto Price'],
-        paypal_price=record['CC/PayPal Price'], 
-        weight = record['Weight'],
-        product_id = record['Product Id'],
-        metal_content = record['Metal Content'],
-        purity = record['Purity'],
-        manufacture = record['Manufacture'],
-        product_url = record['Product URL'],
-        supplier_name= record['Supplier name'],
-        supplier_country = record['Supplier Country']
-    ) for record in df_records]
+  print("in Extracted")
+  df_final = pd.DataFrame([apmex('https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints'),jmbullion(),achat(),bullionstar(),indigopreciousmetals(),sdbullion(), goldcentral(),kitco(),silverbullion(), acheter()])
+  cols = df_final.columns.tolist()
+  cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12]
+  df_final = df_final[cols]
+  df_final.fillna('NA',inplace=True)
+  df_final['Price'] = df_final['Price'].replace(' ',0)
+  df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
+  df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
+  df_final['Price'] = df_final['Price'].astype(float).astype(int)
+  df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
+  df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
+  df_final['Price'] = df_final['Price'].replace(0,'NA')
+  df_final['Crypto Price'] = df_final['Crypto Price'].replace(0,'NA')
+  df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0,'NA')
+  df_records = df_final.to_dict('records')
+  model_instances = [Extracted(
+      product_name=record['Product Name'],
+      price_usd=record['Price'],
+      crypto_price=record['Crypto Price'],
+      paypal_price=record['CC/PayPal Price'], 
+      weight = record['Weight'],
+      product_id = record['Product Id'],
+      metal_content = record['Metal Content'],
+      purity = record['Purity'],
+      manufacture = record['Manufacture'],
+      product_url = record['Product URL'],
+      supplier_name= record['Supplier name'],
+      supplier_country = record['Supplier Country']
+  ) for record in df_records]
 
-    Extracted.objects.bulk_create(model_instances)
+  Extracted.objects.all().delete()
+
+  Extracted.objects.bulk_create(model_instances)
 
 
 

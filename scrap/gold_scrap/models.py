@@ -17,10 +17,10 @@ class Extracted(models.Model):
 # Create your models here.
 class Kitco(models.Model):
     product_name = models.TextField()
-    price_usd = models.IntegerField()
-    price_sgd = models.IntegerField()
-    crypto_price = models.ImageField()
-    paypal_price = models.IntegerField()
+    price_usd = models.CharField(max_length=10)
+    price_sgd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
     premium = models.FloatField()
     product_id = models.CharField(max_length=10)
@@ -34,10 +34,10 @@ class Kitco(models.Model):
 
 class SilverBullion(models.Model):
     product_name = models.TextField()
-    price_usd = models.IntegerField()
-    price_sgd = models.IntegerField()
-    crypto_price = models.ImageField()
-    paypal_price = models.IntegerField()
+    price_usd = models.CharField(max_length=10)
+    price_sgd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
     premium = models.FloatField()
     product_id = models.CharField(max_length=10)
@@ -51,10 +51,10 @@ class SilverBullion(models.Model):
 
 class IndigoPrecious(models.Model):
     product_name = models.TextField()
-    price_usd = models.IntegerField()
-    price_sgd = models.IntegerField()
-    crypto_price = models.ImageField()
-    paypal_price = models.IntegerField()
+    price_usd = models.CharField(max_length=10)
+    price_sgd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
     premium = models.FloatField()
     product_id = models.CharField(max_length=10)
@@ -68,10 +68,10 @@ class IndigoPrecious(models.Model):
 
 class BullionStar(models.Model):
     product_name = models.TextField()
-    price_usd = models.IntegerField()
-    price_sgd = models.IntegerField()
-    crypto_price = models.ImageField()
-    paypal_price = models.IntegerField()
+    price_usd = models.CharField(max_length=10)
+    price_sgd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
     premium = models.FloatField()
     product_id = models.CharField(max_length=10)
@@ -85,10 +85,10 @@ class BullionStar(models.Model):
 
 class GoldCentral(models.Model):
     product_name = models.TextField()
-    price_usd = models.IntegerField()
-    price_sgd = models.IntegerField()
-    crypto_price = models.ImageField()
-    paypal_price = models.IntegerField()
+    price_usd = models.CharField(max_length=10)
+    price_sgd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
     premium = models.FloatField()
     product_id = models.CharField(max_length=10)
@@ -102,10 +102,10 @@ class GoldCentral(models.Model):
 
 class Apmex(models.Model):
     product_name = models.TextField()
-    price_usd = models.IntegerField()
-    price_sgd = models.IntegerField()
-    crypto_price = models.ImageField()
-    paypal_price = models.IntegerField()
+    price_usd = models.CharField(max_length=10)
+    price_sgd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
     premium = models.FloatField()
     product_id = models.CharField(max_length=10)
@@ -119,10 +119,10 @@ class Apmex(models.Model):
 
 class SDBullion(models.Model):
     product_name = models.TextField()
-    price_usd = models.IntegerField()
-    price_sgd = models.IntegerField()
-    crypto_price = models.ImageField()
-    paypal_price = models.IntegerField()
+    price_usd = models.CharField(max_length=10)
+    price_sgd = models.CharField(max_length=10)
+    crypto_price = models.CharField(max_length=10)
+    paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
     premium = models.FloatField()
     product_id = models.CharField(max_length=10)

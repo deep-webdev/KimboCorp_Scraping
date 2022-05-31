@@ -5,9 +5,8 @@ import re
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from lxml.html import fromstring
-import unicodedata
-import gspread
-from pycoingecko import CoinGeckoAPI
+from gold_scrap.models import GoldCentral
+
 
 def scraping(url):
     header = {
@@ -60,6 +59,7 @@ def urls():
 
 spot = troy_to_price()
 def goldcentral(url):
+    print("in goldcentral")
     data = scraping(url)
     dfs = data[0][3]
     soup = data[1]
@@ -70,13 +70,13 @@ def goldcentral(url):
 
     try:
         goldcentral['Price'] = float(soup.find("span", {"class":"amount"}).get_text().replace('$','').replace(',',''))
-        # goldcentral['SGD Price'] =  goldcentral['Price']
+        goldcentral['SGD Price'] =  goldcentral['Price']
         goldcentral['Price'] = Currency * goldcentral['Price']
         
 
     except:  
         goldcentral['Price'] = None
-        # goldcentral['SGD Price'] = None
+        goldcentral['SGD Price'] = None
     goldcentral['Crypto Price'] = None
     goldcentral['CC/PayPal Price'] = None
     try:
@@ -116,42 +116,46 @@ def goldcentral(url):
         goldcentral['Weight'] = None
     return goldcentral
 
-url_S = urls()
-data_set = []
-for url in url_S:
-    data_set.append(goldcentral(url))
 
-df_final = pd.DataFrame(data_set)
-df_final['Fees'] = 0.8
-df_final['Commissions'] = 0.5
-df_final['Final Price'] = df_final['Price'] + df_final['Price'] * (df_final['Fees']/100) + df_final['Price'] * (df_final['Commissions']/100)
+def update_data():
+    url_S = urls()
+    data_set = []
+    for url in url_S:
+        data_set.append(goldcentral(url))
 
-cols = df_final.columns.tolist()
-cols = cols[0:4] + [cols[13]] + [cols[5]] + [cols[12]] + [cols[4]] + [cols[6]] + [cols[10]] + [cols[9]] + [cols[8]] + [cols[7]] + [cols[11]] + cols[14:]
-df_final = df_final[cols]
-df_final.fillna('NA',inplace=True)
-cg = CoinGeckoAPI()
-crypto_price = cg.get_price(ids='bitcoin,tether,ethereum', vs_currencies='usd')
-df_final['Price'] = df_final['Price'].replace('NA',0)
-df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
-df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
-df_final['Final Price'] = df_final['Final Price'].replace('NA',0)
-df_final['Price'] = df_final['Price'].astype(float).astype(int)
-df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
-df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
-df_final['Final Price'] = df_final['Final Price'].astype(int)
-df_final['Price'] = df_final['Price'].replace(0,'NA')
-df_final['Crypto Price'] = df_final['Crypto Price'].replace(0,'NA')
-df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0,'NA')
-df_final['Final Price'] = df_final['Final Price'].replace(0,'NA')
-df_final['Bitcoin Price'] = round(df_final['Final Price'] / crypto_price['bitcoin']['usd'],4)
-df_final['Ethereum Price'] = round(df_final['Final Price'] / crypto_price['ethereum']['usd'], 4)
-df_final['Tether Price'] = round(df_final['Final Price'] / crypto_price['tether']['usd'], 4)
+    df_final = pd.DataFrame(data_set)
+    df_final.fillna('NA',inplace=True)
+    df_final['Price'] = df_final['Price'].replace('NA',0)
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
+    df_final['Price'] = df_final['Price'].astype(float).astype(int)
+    df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
+    df_final['Final Price'] = df_final['Final Price'].astype(int)
+    df_final['Price'] = df_final['Price'].replace(0,'NA')
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace(0,'NA')
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0,'NA')
+    
+    df_records = df_final.to_dict('records')
+    model_instances = [GoldCentral(
+        product_name=record['Product Name'],
+        price_usd=record['Price'],
+        price_sgd=record['SGD Price'],
+        crypto_price=record['Crypto Price'],
+        paypal_price=record['CC/PayPal Price'], 
+        weight = record['Weight'],
+        premium = record['Premium'],
+        product_id = record['Product Id'],
+        metal_content = record['Metal Content'],
+        stock=record['Stock'],
+        purity = record['Purity'],
+        manufacture = record['Manufacture'],
+        product_url = record['Product URL'],
+        supplier_name= record['Supplier name'],
+        supplier_country = record['Supplier Country']
+    ) for record in df_records]
+    
+    GoldCentral.objects.all().delete()
 
-Sheet_name = "Gold Data"
-API_key_file = "/root/gold-data/crypto-sheet-324805-ece76fbce54b.json"
-gc = gspread.service_account(filename=API_key_file)
-sh = gc.open(Sheet_name)
+    GoldCentral.objects.bulk_create(model_instances)
 
-worksheet = sh.get_worksheet(6)
-worksheet.update([df_final.columns.values.tolist()] + df_final.values.tolist())
