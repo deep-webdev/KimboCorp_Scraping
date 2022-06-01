@@ -6,9 +6,8 @@ from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from lxml.html import fromstring
 import unicodedata
-import gspread
-from pycoingecko import CoinGeckoAPI
 import math
+from gold_scrap.models import SilverBullion
 
 def scraping(url):
     header = {
@@ -76,7 +75,7 @@ def silverbul(url):
     Currency = c.get_rate('SGD', 'USD')
     silverbullion['Product Name'] = soup.find('title').get_text().split('|')[0]
     silverbullion['Price'] = float(dfs[10]['Price(SGD)'][0].split(' ')[0].replace(",", ""))
-    # silverbullion['Price SGD'] = silverbullion['Price']
+    silverbullion['SGD Price'] = silverbullion['Price']
     silverbullion['Price'] = Currency* silverbullion['Price']
     silverbullion['Crypto Price'] = None
     silverbullion['CC/PayPal Price'] = None
@@ -112,38 +111,45 @@ def silverbul(url):
     del silverbullion['W tz']
     return silverbullion
 
-data_set =silverbullion()
-df_final = pd.DataFrame(data_set)
-df_final['Fees'] = 0.8
-df_final['Commissions'] = 0.5
-df_final['Final Price'] = df_final['Price'] + df_final['Price'] * (df_final['Fees']/100) + df_final['Price'] * (df_final['Commissions']/100)
+def update_data():
+    data_set =silverbullion()
+    df_final = pd.DataFrame(data_set)
+    df_final.fillna('NA',inplace=True)
+    df_final['Price'] = df_final['Price'].replace('NA',0)
+    df_final['SGD Price'] = df_final['Price SGD'].replace('NA',0)
 
-df_final.fillna('NA',inplace=True)
-cg = CoinGeckoAPI()
-crypto_price = cg.get_price(ids='bitcoin,tether,ethereum', vs_currencies='usd')
-df_final['Price'] = df_final['Price'].replace('NA',0)
-# df_final['Price SGD'] = df_final['Price SGD'].replace('NA',0)
-
-df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
-df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
 
 
-df_final['Price'] = df_final['Price'].astype(float).astype(int)
-# df_final['Price SGD'] = df_final['Price SGD'].astype(float).astype(int)
-df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
-df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
-df_final['Final Price'] = df_final['Final Price'].astype(int)
-df_final['Bitcoin Price'] = round(df_final['Final Price'] / crypto_price['bitcoin']['usd'], 4)
-df_final['Ethereum Price'] = round(df_final['Final Price'] / crypto_price['ethereum']['usd'], 4)
-df_final['Tether Price'] = round(df_final['Final Price'] / crypto_price['tether']['usd'], 4)
-df_final['Price'] = df_final['Price'].replace(0, 'NA')
-# df_final['Price SGD'] = df_final['Price SGD'].replace(0, 'NA')
-df_final['Crypto Price'] = df_final['Crypto Price'].replace(0, 'NA')
-df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0, 'NA')
+    df_final['Price'] = df_final['Price'].astype(float).astype(int)
+    df_final['SGD Price'] = df_final['Price SGD'].astype(float).astype(int)
+    df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
+    df_final['Price'] = df_final['Price'].replace(0, 'NA')
+    df_final['SGD Price'] = df_final['Price SGD'].replace(0, 'NA')
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace(0, 'NA')
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0, 'NA')
 
-Sheet_name = "Gold Data"
-API_key_file = "/root/gold-data/crypto-sheet-324805-ece76fbce54b.json"
-gc = gspread.service_account(filename=API_key_file)
-sh = gc.open(Sheet_name)
-worksheet = sh.get_worksheet(2)
-worksheet.update([df_final.columns.values.tolist()] + df_final.values.tolist())
+    df_records = df_final.to_dict('records')
+    model_instances = [SilverBullion(
+        product_name=record['Product Name'],
+        price_usd=record['Price'],
+        price_sgd=record['SGD Price'],
+        crypto_price=record['Crypto Price'],
+        paypal_price=record['CC/PayPal Price'], 
+        weight = record['Weight'],
+        premium = record['Premium'],
+        product_id = record['Product Id'],
+        metal_content = record['Metal Content'],
+        stock=record['Stock'],
+        purity = record['Purity'],
+        manufacture = record['Manufacture'],
+        product_url = record['Product URL'],
+        supplier_name= record['Supplier name'],
+        supplier_country = record['Supplier Country']
+    ) for record in df_records]
+    
+    SilverBullion.objects.all().delete()
+    
+    SilverBullion.objects.bulk_create(model_instances)
