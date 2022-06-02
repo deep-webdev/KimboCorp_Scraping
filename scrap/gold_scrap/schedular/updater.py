@@ -1,5 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from . import gold_price,goldsilvercentral,indigoprecius, kitco, silverbullion, sdbullion, apmex
+from . import gold_price,goldsilvercentral,indigoprecius, kitco, silverbullion, sdbullion, apmex,bullionstar
+
 
 def start():
     scheduler = BackgroundScheduler(timezone="Europe/Berlin")
@@ -10,4 +11,6 @@ def start():
     scheduler.add_job(silverbullion.update_data, 'interval', minutes=20)
     scheduler.add_job(sdbullion.update_data, 'interval', hours=1)
     scheduler.add_job(apmex.update_data, 'interval', hours=1)
+    scheduler.add_job(goldsilvercentral.update_data, 'interval', hours=1)
+    scheduler.add_job(bullionstar.update_data, 'interval', minutes=30)
     scheduler.start()
