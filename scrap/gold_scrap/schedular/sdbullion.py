@@ -67,15 +67,19 @@ def sdb(url):
     try:
         if 'Troy Oz' in sbul['Metal content']:
             wz = float(sbul['Metal content'].split('Troy Oz')[0].strip())
+            sbul['Weight'] = str(int(wz * 31.103)) + " " + "grams"
             unit_price = wz * spot
         elif 'Grams' in sbul['Metal content']:
             wz = float(sbul['Metal content'].split('Grams')[0]) / 31.103
+            sbul['Weight'] = str(int(wz * 31.103)) + " " + "grams"
             unit_price = wz * spot
         elif 'Gram' in sbul['Metal content']:
             wz = float(sbul['Metal content'].split('Gram')[0]) / 31.103
+            sbul['Weight'] = str(int(wz * 31.103)) + " " + "grams"
             unit_price = wz * spot
         else:
             sbul['Metal content'] = None
+            sbul['Weight'] = None
         if sbul['Price'] and unit_price != 0:
             difference = abs(int(sbul['Price']) - unit_price)
             sbul['Premium'] = round((difference / unit_price) * 100, 2)
@@ -83,15 +87,18 @@ def sdb(url):
             sbul['Premium'] = None    
     except:
         sbul['Premium'] = None
+        sbul['Weight'] = None
     try:
         sbul['Purity'] = df[-1][1][5]
     except:
         sbul['Purity'] = None
+
     sbul['Metal type'] = df[-1][1][0]
     sbul['Product URL'] = url
     sbul['Manufacture'] = None
     sbul['Supplier Country'] = "USA"
     return sbul
+
 
 def sdbullion():
     products = ['https://sdbullion.com/gold/american-gold-eagle-coins/1-oz-gold-eagle-coins',

@@ -59,7 +59,6 @@ def urls():
 
 spot = troy_to_price()
 def goldcentral(url):
-    print("in goldcentral")
     data = scraping(url)
     dfs = data[0][3]
     soup = data[1]
@@ -72,8 +71,6 @@ def goldcentral(url):
         goldcentral['Price'] = float(soup.find("span", {"class":"amount"}).get_text().replace('$','').replace(',',''))
         goldcentral['SGD Price'] =  goldcentral['Price']
         goldcentral['Price'] = Currency * goldcentral['Price']
-        
-
     except:  
         goldcentral['Price'] = None
         goldcentral['SGD Price'] = None
@@ -85,7 +82,6 @@ def goldcentral(url):
     except:  
         goldcentral['Metal Content'] = None
         content = 0
-    
     unit_price = float(spot) * float(convert_to_float(content))
     
     if goldcentral['Price'] and content != 0: 
@@ -131,7 +127,6 @@ def update_data():
     df_final['Price'] = df_final['Price'].astype(float).astype(int)
     df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
     df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
-    df_final['Final Price'] = df_final['Final Price'].astype(int)
     df_final['Price'] = df_final['Price'].replace(0,'NA')
     df_final['Crypto Price'] = df_final['Crypto Price'].replace(0,'NA')
     df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0,'NA')
