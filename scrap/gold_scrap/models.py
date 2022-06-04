@@ -13,6 +13,9 @@ class Extracted(models.Model):
     product_url = models.CharField(max_length=50)
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.supplier_name
 
 # Create your models here.
 class Kitco(models.Model):
@@ -32,6 +35,9 @@ class Kitco(models.Model):
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.product_name
+    
 class SilverBullion(models.Model):
     product_name = models.TextField()
     price_usd = models.CharField(max_length=10)
@@ -48,6 +54,9 @@ class SilverBullion(models.Model):
     product_url = models.CharField(max_length=50)
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.product_name
 
 class IndigoPrecious(models.Model):
     product_name = models.TextField()
@@ -66,6 +75,9 @@ class IndigoPrecious(models.Model):
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.product_name
+
 class BullionStar(models.Model):
     product_name = models.TextField()
     price_usd = models.CharField(max_length=10)
@@ -82,6 +94,9 @@ class BullionStar(models.Model):
     product_url = models.CharField(max_length=50)
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.product_name
 
 class GoldCentral(models.Model):
     product_name = models.TextField()
@@ -100,6 +115,9 @@ class GoldCentral(models.Model):
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.product_name
+
 class Apmex(models.Model):
     product_name = models.TextField()
     price_usd = models.CharField(max_length=10)
@@ -117,6 +135,9 @@ class Apmex(models.Model):
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.product_name
+
 class SDBullion(models.Model):
     product_name = models.TextField()
     price_usd = models.CharField(max_length=10)
@@ -133,3 +154,6 @@ class SDBullion(models.Model):
     product_url = models.CharField(max_length=50)
     supplier_name = models.CharField(max_length=20)
     supplier_country = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.product_name
