@@ -42,12 +42,12 @@ def convert_to_float(frac_str):
         frac = float(num) / float(denom)
         return whole - frac if whole < 0 else whole + frac
     
-spot = troy_to_price()
 def apmex(url):
     data = scraping(url)
     df = data[0][-1]
     soup = data[1]
     apmex_data = {}
+    spot = troy_to_price()
     try:
         apmex_data['Product Name'] = soup.find("h1", {"class": "product-title"}).get_text().strip()
     except:
