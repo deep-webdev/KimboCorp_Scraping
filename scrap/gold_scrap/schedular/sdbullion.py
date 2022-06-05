@@ -43,8 +43,8 @@ def troy_to_price():
     spot = float(dfs[0]['Today'][0].replace('$','').replace(',',''))
     return spot
 
-spot = troy_to_price()
 def sdb(url):
+    spot = troy_to_price()
     data = scraping(url)
     df = data[0]
     soup = data[1]
@@ -160,16 +160,6 @@ def update_data():
     df_final = pd.DataFrame(data_set)
 
     df_final.fillna('NA',inplace=True)
-    df_final['Price'] = df_final['Price'].replace('NA',0)
-    df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
-    df_final['Credit/Paypal Price'] = df_final['Credit/Paypal Price'].replace('NA',0)
-    df_final['Price'] = df_final['Price'].astype(float).astype(int)
-    df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
-    df_final['Credit/Paypal Price'] = df_final['Credit/Paypal Price'].astype(int)
-    df_final['Price'] = df_final['Price'].replace(0,'NA')
-    df_final['Crypto Price'] = df_final['Crypto Price'].replace(0,'NA')
-    df_final['Credit/Paypal Price'] = df_final['Credit/Paypal Price'].replace(0,'NA')
-    df_final['Purity'] = df_final['Purity'].replace('','NA')
     df_final['SGD Price'] = "NA"
 
     df_records = df_final.to_dict('records')
