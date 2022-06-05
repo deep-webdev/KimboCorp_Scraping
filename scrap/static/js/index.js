@@ -1,20 +1,20 @@
 import { getColumnList, getProductsList } from "./data.js";
 
 //place the navbar
-const navBar =document.querySelector('.navbar');
-fetch('../../templates/common/navbar.html')
-.then(res => res.text())
-.then(data => {
-  navBar.innerHTML= data
-})
+// const navBar = document.querySelector(".navbar");
+// fetch("/templates/navbar.html")
+//   .then((res) => res.text())
+//   .then((data) => {
+//     navBar.innerHTML = data;
+//   });
 
 //place the footer
-const footer =document.querySelector('.footer');
-fetch('../../templates/common/footer.html')
-.then(res => res.text())
-.then(data => {
-  footer.innerHTML= data
-})
+// const footer = document.querySelector(".footer");
+// fetch("../../templates/footer.html")
+//   .then((res) => res.text())
+//   .then((data) => {
+//     footer.innerHTML = data;
+//   });
 
 //get the product list
 const productList = getProductsList();
@@ -22,10 +22,9 @@ console.log(productList);
 //get the column list
 const columnList = getColumnList();
 
-
 //column list
 let tableHeader = document.getElementById("tableHeader");
-let columnData = ''
+let columnData = "";
 for (var i = 0; i < columnList.length; i++) {
   columnData += `<th>${columnList[i].name}</th>`;
 }
@@ -47,5 +46,5 @@ for (var i = 0; i < productList.length; i++) {
   <td>${productList[i].purity}</td>
   </tr>`;
 }
-console.log('DATA',data);
+console.log("DATA", data);
 tableBody.innerHTML = data;

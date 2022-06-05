@@ -1,7 +1,9 @@
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    {% load static %}
+    {% comment %} {% load static %} {% endcomment %}
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,15 +21,39 @@
       href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css"
     />
     <!--css-->
-    <link rel="stylesheet" href="./index.css" />
+    <link rel="stylesheet" href="{% static 'css/index.css'%}" />
       
     </head>
 
   <body>
-    <script src="{% static 'index.js' %}"></script>
+    
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3" id="Navbar">
       <!-- content set for navbar -->
+      <div class="container" id="navbar">
+        <a href="#" class="brandName navbar-brand">
+            <img src="/media/gold-bars.png" width="60" height="60" alt=""
+                class="d-inline-block align-text-middle" /><span class="px-3" href="../index.html">Gold Data</span>
+        </a>
+    
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Extracted</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../product.html" class="nav-link">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../allProducts.html" class="nav-link">All Products</a>
+                </li>
+            </ul>
+        </div>
+    </div>
     </nav>
 
     <!--Explore Section -->
@@ -112,7 +138,9 @@
     <!--Footer-->
     <footer
       class="container-fluid text-center bg-dark mt-5 footer position-relative"
-    ></footer>
+    >
+    <div class="text-light p-4">Gold Data Scraping</div>
+  </footer>
   </body>
   <!-- scripts -->
   {% comment %} <script type="module" src={% static 'js/index.js %}></script> {% endcomment %}
@@ -126,4 +154,5 @@
     src="https://kit.fontawesome.com/f7b1e488bc.js"
     crossorigin="anonymous"
   ></script>
+  <script type="module" src="{% static 'js/index.js'%}"></script>
 </html>
