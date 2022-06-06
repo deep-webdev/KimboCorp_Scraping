@@ -49,7 +49,10 @@ def sdb(url):
     df = data[0]
     soup = data[1]
     sbul = {}
-    sbul['Product name'] = soup.find("h1", {'class': 'page-title'}).get_text()
+    try:
+        sbul['Product name'] = soup.find("h1", {'class': 'page-title'}).get_text()
+    except:
+        sbul['Product name'] = "NA"
 
     if not soup.find('p', {'class': 'currently-out-of-stock'}):
         sbul['Price'] = float(df[0]['Check / Wire'][0].split("$")[1].replace(",",""))
@@ -97,6 +100,7 @@ def sdb(url):
     sbul['Product URL'] = url
     sbul['Manufacture'] = None
     sbul['Supplier Country'] = "USA"
+    sbul['SGD Price'] = "NA"
     return sbul
 
 
@@ -160,7 +164,6 @@ def update_data():
     df_final = pd.DataFrame(data_set)
 
     df_final.fillna('NA',inplace=True)
-    df_final['SGD Price'] = "NA"
 
     df_records = df_final.to_dict('records')
     model_instances = [SDBullion(

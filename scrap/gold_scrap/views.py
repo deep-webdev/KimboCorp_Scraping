@@ -7,6 +7,7 @@ from django.apps import apps
 # Create your views here.
 def index(request):
      silverbullion.update_data()
+     sdbullion.update_data()
      return render(request, 'base.html')
 
 
@@ -33,3 +34,5 @@ def all_products(request):
      Model = apps.get_model('gold_scrap', model_details[suplier_name[0]])
      data = get_suplier_data(Model)
      return render(request,'product.html',{'data':data, 'name': model_details[suplier_name[0]]})
+     
+     

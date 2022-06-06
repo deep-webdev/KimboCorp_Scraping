@@ -79,21 +79,25 @@ def silverbul(url):
     silverbullion['Price'] = Currency* silverbullion['Price']
     silverbullion['Crypto Price'] = None
     silverbullion['CC/PayPal Price'] = None
+    
     try:
         silverbullion['W tz'] = dfs[8][0][0].split('oz')[0].strip().split('(')[1].strip()
     except:
         silverbullion['W tz'] = dfs[8][0][0].split('oz')[0].strip()
         if '|' in silverbullion['W tz'].split():
             silverbullion['W tz'] = dfs[8][0][0].split('oz')[0].split('|')[1].strip()
-            
-    tz = convert_to_float(silverbullion['W tz'])
-    
+    if 'tolas' in silverbullion['W tz'].split():
+        silverbullion['W tz'] = silverbullion['W tz'].split('tolas')[0].strip()
+        tz = float(silverbullion['W tz'])
+    else:      
+        tz = convert_to_float(silverbullion['W tz'])
+
     try:
         if silverbullion['W tz'].split('/'):
             silverbullion['Weight'] = str(int(math.floor(tz * 31.103))) + " " + "grams"
     except:
         silverbullion['Weight'] = str(int(math.floor(silverbullion['W tz'] * 31.103))) + " " + "grams"
-        
+
     unit_price = spot * tz
     difference = abs(int(silverbullion['Price']) - unit_price)
     silverbullion['Premium'] = round((difference / unit_price) * 100, 2)
@@ -115,7 +119,24 @@ def update_data():
     data_set =silverbullion()
     df_final = pd.DataFrame(data_set)
     df_final.fillna('NA',inplace=True)
-
+    
+    df_final['Price'] = df_final['Price'].replace('NA',0)
+    df_final['SGD Price'] = df_final['SGD Price'].replace('NA',0)
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
+    df_final['Price'] = df_final['Price'].astype(float).astype(int)
+    df_final['SGD Price'] = df_final['SGD Price'].astype(float).astype(int)
+    df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
+    # df_final['Final Price'] = df_final['Final Price'].astype(int)
+    # df_final['Bitcoin Price'] = round(df_final['Final Price'] / crypto_price['bitcoin']['usd'], 4)
+    # df_final['Ethereum Price'] = round(df_final['Final Price'] / crypto_price['ethereum']['usd'], 4)
+    # df_final['Tether Price'] = round(df_final['Final Price'] / crypto_price['tether']['usd'], 4)
+    df_final['Price'] = df_final['Price'].replace(0, 'NA')
+    df_final['SGD Price'] = df_final['SGD Price'].replace(0, 'NA')
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace(0, 'NA')
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0, 'NA')
+    
     df_records = df_final.to_dict('records')
     model_instances = [SilverBullion(
         product_name=record['Product Name'],

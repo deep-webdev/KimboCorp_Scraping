@@ -83,7 +83,7 @@ def indigofetch(url):
     indigo['Product URL'] = url
     indigo['Supplier name'] = 'Indigo precious metals'
     indigo['Supplier Country'] = 'Singapore'
-    indigo['Weight'] = None
+    indigo['Weight'] = indigo['Metal Content']
     return indigo
 
 def indigo():
