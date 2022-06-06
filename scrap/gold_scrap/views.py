@@ -32,4 +32,4 @@ def all_products(request):
      }
      Model = apps.get_model('gold_scrap', model_details[suplier_name[0]])
      data = get_suplier_data(Model)
-     return render(request,'product.html',{'data':data})
+     return render(request,'product.html',{'data':data, 'name': model_details[suplier_name[0]]})
