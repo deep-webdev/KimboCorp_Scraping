@@ -73,10 +73,10 @@
                 btc_price = final_price/(data.bitcoin.usd);
                 eth_price = final_price/data.ethereum.usd;
                 th_price = final_price/data.tether.usd;
-                t_data[7] =  final_price.toFixed(2); 
-                t_data[8] = btc_price.toFixed(2);
-                t_data[9] = eth_price.toFixed(2);
-                t_data[10] = th_price.toFixed(2);
+                t_data[4] =  final_price.toFixed(2); 
+                t_data[5] = btc_price.toFixed(2);
+                t_data[6] = eth_price.toFixed(2);
+                t_data[7] = th_price.toFixed(2);
                 this.data(t_data)
              } )
             }
@@ -124,7 +124,7 @@
                   <a href="{% url 'products' %}" class="nav-link">Products</a>
               </li>
               <li class="nav-item">
-                  <a href="../allProducts.html" class="nav-link">All Products</a>
+                  <a href="{% url 'all_prod'%}" class="nav-link">All Products</a>
               </li>
           </ul>
       </div>
@@ -174,8 +174,8 @@
     <div class="container pt-3">
       <div style="float:Center;margin:20px">
 
-      <label>Fees<input type="number" name="fees" id="fees" /></label>
-      <label>Commission<input type="number" name="cms" id="cms" /></label>
+      <label>Fees<input type="number" name="fees" id="fees" value="0.8"/></label>
+      <label>Commission<input type="number" name="cms" id="cms" value="0.5"/></label>
       
       <input type="button" class="btn btn-primary" name="Calculate" value="Calculate" onclick="calculate()"/>
       </div>
@@ -191,9 +191,9 @@
             <th>Product Name</th>
             <th>Price (USD)</th>
             <th>Weight</th>
-            <th>Metal Content</th>
-            <th>Purity</th>
-            <th>Manufacture</th>
+            {% comment %} <th>Metal Content</th> {% endcomment %}
+            {% comment %} <th>Purity</th> {% endcomment %}
+            {% comment %} <th>Manufacture</th> {% endcomment %}
             <th>Premium %</th>
             <th>Final Price</th>
             <th>Bitcoin Price</th>
@@ -212,9 +212,9 @@
                <td><a href="{{ i.product_url }}" >{{ i.product_name }} </a> </td>
                <td> {{ i.price_usd }} </td>
                <td> {{ i.weight }} </td>
-               <td> {{ i.metal_content }} </td>
-               <td> {{ i.purity }} </td>
-               <td> {{ i.manufacture }} </td>
+               {% comment %} <td> {{ i.metal_content }} </td> {% endcomment %}
+               {% comment %} <td> {{ i.purity }} </td> {% endcomment %}
+               {% comment %} <td> {{ i.manufacture }} </td> {% endcomment %}
                <td>{{ i.premium }}</td>
                <th>{{ i.Final_Price|floatformat:2 }}</th>
                <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>

@@ -22,7 +22,7 @@ def update_data():
     df_final['SGD Price'] = 'NA'
     df_final['Crypto Price'] = 'NA'
     df_final['CC/PayPal Price'] = 'NA'
-    df_final['Supplier name'] = 'NA'
+    df_final['Supplier name'] = "Bullion Star"
 
     df_final.fillna('NA',inplace=True)
     df_records = df_final.to_dict('records')

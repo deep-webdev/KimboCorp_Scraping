@@ -6,6 +6,7 @@ from django.db.models import Min
 from django.apps import apps
 from pycoingecko import CoinGeckoAPI
 import pandas as pd 
+from itertools import chain
 
 # Create your views here.
 def index(request):
@@ -52,3 +53,14 @@ def get_crypto_price(request):
      cg = CoinGeckoAPI()
      crypto_price = cg.get_price(ids='bitcoin,tether,ethereum', vs_currencies='usd')
      return JsonResponse(crypto_price)
+
+def all_supp_products(request):
+     silverbul = SilverBullion.objects.all()
+     indigorecious = IndigoPrecious.objects.all()
+     apmex = Apmex.objects.all()
+     bullion = BullionStar.objects.all()
+     sdbul = SDBullion.objects.all()
+     goldcentral = GoldCentral.objects.all()
+     kitco = Kitco.objects.all()
+     result_list = list(chain(silverbul,indigorecious, apmex, bullion, sdbul, goldcentral, kitco))
+     return render(request, 'allProducts.html', {'data': result_list})
