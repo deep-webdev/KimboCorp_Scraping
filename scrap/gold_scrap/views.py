@@ -1,8 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from . models import *
 from gold_scrap.schedular import apmex,sdbullion,silverbullion
 from django.db.models import Min
 from django.apps import apps
+from pycoingecko import CoinGeckoAPI
+import pandas as pd 
 
 # Create your views here.
 def index(request):
@@ -18,7 +21,17 @@ def extracted(request):
 
 def get_suplier_data(name):
      data = name.objects.all()
-     return data
+     cg = CoinGeckoAPI()
+     crypto_price = cg.get_price(ids='bitcoin,tether,ethereum', vs_currencies='usd')
+     df_final = pd.DataFrame(list(data.values()))
+     df_final['Fees'] = 0.8
+     df_final['Commissions'] = 0.5
+     df_final['price_usd'] = df_final['price_usd'].astype(float)
+     df_final['Final_Price'] = df_final['price_usd'] + df_final['price_usd'] * (df_final['Fees']/100) + df_final['price_usd'] * (df_final['Commissions']/100)
+     df_final['Bitcoin_Price'] = round(df_final['Final_Price'] / crypto_price['bitcoin']['usd'], 4)
+     df_final['Ethereum_Price'] = round(df_final['Final_Price'] / crypto_price['ethereum']['usd'], 4)
+     df_final['Tether_Price'] = round(df_final['Final_Price'] / crypto_price['tether']['usd'], 4)
+     return df_final.to_dict('records')
 
 def all_products(request):
      suplier_name = Extracted.objects.filter().values_list('supplier_name').annotate(Min('price_usd')).order_by('price_usd')[0]
@@ -34,5 +47,8 @@ def all_products(request):
      Model = apps.get_model('gold_scrap', model_details[suplier_name[0]])
      data = get_suplier_data(Model)
      return render(request,'product.html',{'data':data, 'name': model_details[suplier_name[0]]})
-     
-     
+
+def get_crypto_price(request):
+     cg = CoinGeckoAPI()
+     crypto_price = cg.get_price(ids='bitcoin,tether,ethereum', vs_currencies='usd')
+     return JsonResponse(crypto_price)
