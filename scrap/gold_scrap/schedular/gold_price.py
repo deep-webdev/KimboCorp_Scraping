@@ -318,7 +318,6 @@ def main_update():
   print("in Extracted")
   df_final = pd.DataFrame([apmex('https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints'),jmbullion(),achat(),bullionstar(),indigopreciousmetals(),sdbullion(), goldcentral(),kitco(),silverbullion(), acheter()])
   cols = df_final.columns.tolist()
-  print(cols)
   cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12] + [cols[12]]
   df_final = df_final[cols]
   df_final.fillna('NA',inplace=True)
