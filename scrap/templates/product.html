@@ -124,7 +124,7 @@
                   <a href="{% url 'products' %}" class="nav-link">Products</a>
               </li>
               <li class="nav-item">
-                  <a href="../allProducts.html" class="nav-link">All Products</a>
+                  <a href=".{% url 'all_prod' %}" class="nav-link">All Products</a>
               </li>
           </ul>
       </div>
@@ -191,10 +191,10 @@
             <th>Product Name</th>
             <th>Price (USD)</th>
             <th>Weight</th>
-            <th>Metal Content</th>
             <th>Purity</th>
             <th>Manufacture</th>
             <th>Premium %</th>
+            <th>Stock</th>
             <th>Final Price</th>
             <th>Bitcoin Price</th>
             <th>Ethereum Price</th>
@@ -212,10 +212,10 @@
                <td><a href="{{ i.product_url }}" >{{ i.product_name }} </a> </td>
                <td> {{ i.price_usd }} </td>
                <td> {{ i.weight }} </td>
-               <td> {{ i.metal_content }} </td>
                <td> {{ i.purity }} </td>
                <td> {{ i.manufacture }} </td>
                <td>{{ i.premium }}</td>
+               <td>{{ i.stock }}</td>
                <th>{{ i.Final_Price|floatformat:2 }}</th>
                <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>
                <th>{{ i.Ethereum_Price|floatformat:2 }}</th>
