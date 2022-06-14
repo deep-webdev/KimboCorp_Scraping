@@ -7,7 +7,6 @@ from lxml.html import fromstring
 import unicodedata
 from gold_scrap.models import Extracted
 
-
 def scraping(url):
   header = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36",
@@ -22,6 +21,15 @@ def scraping(url):
     dfs = pd.DataFrame()
   soup = BeautifulSoup(r.content, features="lxml")
   return [dfs, soup]
+
+def troy_to_price():
+    data = scraping('https://www.monex.com/gold-prices/')
+    dfs = data[0]
+    soup = data[1]
+    spot = float(dfs[0]['Today'][0].replace('$','').replace(',',''))
+    return spot
+
+spot = troy_to_price()
 
 def apmex(url):
   # data = scraping('https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints')
@@ -42,6 +50,9 @@ def apmex(url):
   apmex_data['Supplier name'] = 'APMEX'
   apmex_data['Supplier Country'] = 'Singapore'
   apmex_data['Weight'] = '1000 G'
+  unit_price = spot * 32.15
+  difference = abs(int(apmex_data['Price']) - unit_price)
+  apmex_data['Premium'] = round((difference / unit_price) * 100, 2)
   # apmex_data['Weight'] = soup.find("ul", {"class":"product-table left"}).get_text().split('Denomination:')[1].split('\n')[0].strip()
   return apmex_data
 
@@ -62,7 +73,9 @@ def jmbullion():
   jmbullion_data['Supplier name'] = 'JMBullion'
   jmbullion_data['Supplier Country'] = 'USA'
   jmbullion_data['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(int(jmbullion_data['Price']) - unit_price)
+  jmbullion_data['Premium'] = round((difference / unit_price) * 100, 2)
   # jmbullion_data['Weight'] = soup.find("div", {"class": "specification-detail"}).get_text().split('Today,')[1].split('Valcambi')[0].strip()
   return jmbullion_data
 
@@ -87,7 +100,9 @@ def achat():
   achat_data['Supplier Country'] = 'USA'
   achat_data['Product Name']='LINGOT 1KG OR'
   achat_data['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(int(achat_data['Price']) - unit_price)
+  achat_data['Premium'] = round((difference / unit_price) * 100, 2)
   # achat_data['Weight'] =  dict(dfs[0][1])[1]
 
   return achat_data
@@ -113,7 +128,9 @@ def bullionstar():
   bullionstar_data['Supplier name'] = 'Bullion Star'
   bullionstar_data['Supplier Country'] = 'Singapore'
   bullionstar_data['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(float(bullionstar_data['Price']) - unit_price)
+  bullionstar_data['Premium'] = round((difference / unit_price) * 100, 2)
   # bullionstar_data['Weight'] = soup.find("div",{"class": "product-highlight"}).get_text().split('Weight:')[1].split('(')[0].strip()
   return bullionstar_data
 
@@ -134,7 +151,9 @@ def indigopreciousmetals():
   indigo['Supplier name'] = 'Indigo precious metals'
   indigo['Supplier Country'] = 'Singapore'
   indigo['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(int(indigo['Price']) - unit_price)
+  indigo['Premium'] = round((difference / unit_price) * 100, 2)
   # indigo['Weight'] = soup.find("div", {"class":"specifications"}).get_text(strip=True).split('Country')[0].split('Weight')[1]  
   return indigo
 
@@ -155,7 +174,9 @@ def sdbullion():
   sdbullion['Supplier name'] = 'SDbullion'
   sdbullion['Supplier Country'] = 'USA'
   sdbullion['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(int(sdbullion['Price']) - unit_price)
+  sdbullion['Premium'] = round((difference / unit_price) * 100, 2)
   # sdbullion['Weight'] = soup.find("h1", {"class":"page-title"}).get_text().split("Gold")[0].strip()
   return sdbullion
 
@@ -182,7 +203,9 @@ def bullion():
   bullion['Product Id'] = None
   bullion['Supplier name'] = "bullionbypost"
   bullion['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(int(bullion['Price']) - unit_price)
+  bullion['Premium'] = round((difference / unit_price) * 100, 2)
   # bullion['Weight'] = soup.find("div", {"class":"col product-specifications"}).get_text().split('(grams):')[1].split('\n')[0]
   return bullion
 
@@ -207,7 +230,9 @@ def goldcentral():
   goldcentral['Metal Content'] = None
   goldcentral['Product Id'] = None
   goldcentral['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(int(goldcentral['Price']) - unit_price)
+  goldcentral['Premium'] = round((difference / unit_price) * 100, 2)
   # goldcentral['Weight'] = soup.find("h1", {"class":"product_title entry-title"}).get_text().split(" ")[5]
   return goldcentral
 
@@ -229,7 +254,9 @@ def kitco():
   kitco['Purity'] = soup.find("ul", {"id": "prod_details_list"}).get_text().split('Fineness:')[1].strip().split('\r')[0]
   # kitco['Weight'] = soup.find("section", {"id": "prod_desc_section"}).get_text().split('Gold')[0].split('Buy')[1].strip()
   kitco['Weight'] = '1000 G'
-
+  unit_price = spot * 32.15
+  difference = abs(int(kitco['Price']) - unit_price)
+  kitco['Premium'] = round((difference / unit_price) * 100, 2)
   return kitco
 
 def silverbullion():
@@ -253,6 +280,9 @@ def silverbullion():
   silverbullion['Supplier name'] = "Silver Bullion"
   # silverbullion['Stock'] = soup.find("p", {"class": "item-available"}).get_text().split(':')[1]
   silverbullion['Weight'] = "1000 G"
+  unit_price = spot * 32.15
+  difference = abs(int(silverbullion['Price']) - unit_price)
+  silverbullion['Premium'] = round((difference / unit_price) * 100, 2)
   return silverbullion
 
 def acheter():
@@ -277,6 +307,9 @@ def acheter():
   acheter['Supplier Country'] = "France"
   # acheter['Weight'] = soup.find("div", {"class": "description"}).get_text().split('Poids :')[1].split('\n')[0].strip()
   acheter['Weight'] = '1000 G'
+  unit_price = spot * 32.15
+  difference = abs(int(acheter['Price']) - unit_price)
+  acheter['Premium'] = round((difference / unit_price) * 100, 2)
 
   return acheter
 
@@ -285,7 +318,7 @@ def main_update():
   print("in Extracted")
   df_final = pd.DataFrame([apmex('https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints'),jmbullion(),achat(),bullionstar(),indigopreciousmetals(),sdbullion(), goldcentral(),kitco(),silverbullion(), acheter()])
   cols = df_final.columns.tolist()
-  cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12]
+  cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12] + [cols[12]]
   df_final = df_final[cols]
   df_final.fillna('NA',inplace=True)
   df_final['Price'] = df_final['Price'].replace(' ',0)
@@ -304,6 +337,7 @@ def main_update():
       crypto_price=record['Crypto Price'],
       paypal_price=record['CC/PayPal Price'], 
       weight = record['Weight'],
+      premium = record['Premium'],
       product_id = record['Product Id'],
       metal_content = record['Metal Content'],
       purity = record['Purity'],

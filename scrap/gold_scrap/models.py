@@ -6,6 +6,7 @@ class Extracted(models.Model):
     crypto_price = models.CharField(max_length=10)
     paypal_price = models.CharField(max_length=10)
     weight = models.CharField(max_length=10)
+    premium = models.CharField(max_length=10)
     product_id = models.CharField(max_length=10)
     metal_content = models.CharField(max_length=20)
     purity = models.CharField(max_length=10)

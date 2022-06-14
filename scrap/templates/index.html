@@ -134,9 +134,10 @@
             <th>Crypto Price</th>
             <th>CC/PayPal Price</th>
             <th>Weight</th>
-            <th>Metal Content</th>
+            {% comment %} <th>Metal Content</th> {% endcomment %}
             <th>Purity</th>
             <th>Manufacture</th>
+            <th>Premium(%)</th>
             {% comment %} <th>Product URL</th> {% endcomment %}
             <th>Supplier name</th>
             <th>Supplier Country</th>
@@ -153,9 +154,10 @@
                <td> {{ i.crypto_price }} </td>
                <td> {{ i.paypal_price }} </td>
                <td> {{ i.weight }} </td>
-               <td> {{ i.metal_content }} </td>
+               {% comment %} <td> {{ i.metal_content }} </td> {% endcomment %}
                <td> {{ i.purity }} </td>
                <td> {{ i.manufacture }} </td>
+               <td> {{ i.premium }} </td>
                {% comment %} <td><a href="{{ i.product_url }}" >{{ i.product_url|slice:":10" }} </a></td> {% endcomment %}
                <td> {{ i.supplier_name }} </td>
                <td> {{ i.supplier_country }} </td>
