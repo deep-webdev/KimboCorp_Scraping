@@ -47,7 +47,30 @@
     <script>
       $(document).ready(function () {
           var table = $('#example').DataTable();
-        });
+
+        $('input.toggle-vis').on('change', function (e) {
+          e.preventDefault();
+   
+          // Get the column API object
+          var column = table.column($(this).attr('data-column'));
+   
+          // Toggle the visibility
+          column.visible(!column.visible());
+      });
+  });   
+
+  var expanded = false;
+
+  function showCheckboxes() {
+    var checkboxes = document.getElementById("checkboxes");
+    if (!expanded) {
+      checkboxes.style.display = "block";
+      expanded = true;
+    } else {
+      checkboxes.style.display = "none";
+      expanded = false;
+    }
+  }
         </script>
 
       <script>
@@ -73,10 +96,10 @@
                 btc_price = final_price/(data.bitcoin.usd);
                 eth_price = final_price/data.ethereum.usd;
                 th_price = final_price/data.tether.usd;
-                t_data[7] =  final_price.toFixed(2); 
-                t_data[8] = btc_price.toFixed(2);
-                t_data[9] = eth_price.toFixed(2);
-                t_data[10] = th_price.toFixed(2);
+                t_data[9] =  final_price.toFixed(2); 
+                t_data[10] = btc_price.toFixed(2);
+                t_data[11] = eth_price.toFixed(2);
+                t_data[12] = th_price.toFixed(2);
                 this.data(t_data)
              } )
             }
@@ -93,6 +116,47 @@
         }
 
       </script>
+      <style>
+
+        .multiselect {
+          width: 300px;
+          margin:20px;
+        }
+        
+        .selectBox {
+          position: relative;
+        }
+        
+        .selectBox select {
+          width: 100%;
+          font-weight: bold;
+        }
+        
+        .overSelect {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+        }
+        
+        #checkboxes {
+          display: none;
+          border: 1px #dadada solid;
+  
+        }
+        
+        #checkboxes label {
+          display: block;
+        }
+        
+        #checkboxes label:hover {
+          background-color: #1e90ff;
+        }
+        
+  
+      </style>
+  
     <style>
       label{display:inline-block;}
       input{display:block;}
@@ -176,9 +240,57 @@
 
       <label>Fees<input type="number" name="fees" id="fees" value="0.8"/></label>
       <label>Commission<input type="number" name="cms" id="cms" value="0.5"/></label>
-      
+
       <input type="button" class="btn btn-primary" name="Calculate" value="Calculate" onclick="calculate()"/>
       </div>
+
+      <div class="multiselect">
+        <div class="selectBox" onclick="showCheckboxes()">
+          <select>
+            <option>Select Columns to Display</option>
+          </select>
+          <div class="overSelect"></div>
+        </div>
+        <div id="checkboxes">
+          <label for="one">
+            <input type="checkbox" id="one" class="toggle-vis" data-column="0" />Product Name </label>
+          <label for="one">
+            <input type="checkbox" id="one" class="toggle-vis" data-column="1" />Price (USD) </label>
+    
+            <label for="one">
+              <input type="checkbox" id="one" class="toggle-vis" data-column="2" />Weight </label>
+            <label for="one">
+              <input type="checkbox" id="one" class="toggle-vis" data-column="3" />Purity </label>
+              <label for="one">
+                <input type="checkbox" id="one" class="toggle-vis" data-column="4" />Manufacture </label>
+  
+            <label for="one">
+              <input type="checkbox" id="one" class="toggle-vis" data-column="5" />Premium(%) </label>
+            <label for="one">
+              <input type="checkbox" id="one" class="toggle-vis" data-column="6" />Supplier name </label>
+      
+              <label for="one">
+                <input type="checkbox" id="one" class="toggle-vis" data-column="7" />Supplier Country </label>
+                <label for="one">
+                  <input type="checkbox" id="one" class="toggle-vis" data-column="8" />Stock </label>
+        
+                <label for="one">
+                  <input type="checkbox" id="one" class="toggle-vis" data-column="9" />Final Price </label>
+        
+                <label for="one">
+                  <input type="checkbox" id="one" class="toggle-vis" data-column="10" />Bitcoin Price </label>
+            
+                <label for="one">
+                  <input type="checkbox" id="one" class="toggle-vis" data-column="11" />Ethereum Price </label>
+        
+                <label for="one">
+                  <input type="checkbox" id="one" class="toggle-vis" data-column="12" />Tether Price</label>
+              
+                              
+            </div>
+      </div>
+    
+
       <table
         class="table display responsive"
         id="example"
@@ -193,18 +305,15 @@
             <th>Weight</th>
             <th>Purity</th>
             <th>Manufacture</th>
-<<<<<<< HEAD
             <th>Premium %</th>
+            <th>Supplier Name</th>
+            <th>Supplier Country</th>
             <th>Stock</th>
-=======
-            <th>Premium(%)</th>
->>>>>>> 7e05a1c6b7a048cb31587d739ba15ccda0042779
             <th>Final Price</th>
             <th>Bitcoin Price</th>
             <th>Ethereum Price</th>
             <th>Tether Price</th>
             {% comment %} <th>Product URL</th> {% endcomment %}
-            <th>Supplier Country</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -219,14 +328,15 @@
                <td> {{ i.purity }} </td>
                <td> {{ i.manufacture }} </td>
                <td>{{ i.premium }}</td>
+               <td> {{ i.supplier_name }} </td>
+               <td> {{ i.supplier_country }} </td>
+
                <td>{{ i.stock }}</td>
                <th>{{ i.Final_Price|floatformat:2 }}</th>
                <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>
                <th>{{ i.Ethereum_Price|floatformat:2 }}</th>
                <th>{{ i.Tether_Price|floatformat:2 }}</th>
    
-               {% comment %} <td><a href="{{ i.product_url }}" >{{ i.product_url|slice:":10" }} </a></td> {% endcomment %}
-               <td> {{ i.supplier_country }} </td>
 
           </tr>
    {% endfor %}
