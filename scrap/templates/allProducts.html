@@ -7,7 +7,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Products</title>
+    <title>All Products</title>
     <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -47,8 +47,32 @@
     <script>
       $(document).ready(function () {
           var table = $('#example').DataTable();
-        });
+
+        $('input.toggle-vis').on('change', function (e) {
+          e.preventDefault();
+   
+          // Get the column API object
+          var column = table.column($(this).attr('data-column'));
+   
+          // Toggle the visibility
+          column.visible(!column.visible());
+      });
+  });   
+
+  var expanded = false;
+
+  function showCheckboxes() {
+    var checkboxes = document.getElementById("checkboxes");
+    if (!expanded) {
+      checkboxes.style.display = "block";
+      expanded = true;
+    } else {
+      checkboxes.style.display = "none";
+      expanded = false;
+    }
+  }
         </script>
+
 
       <script>
         function calculate(){
@@ -73,10 +97,10 @@
                 btc_price = final_price/(data.bitcoin.usd);
                 eth_price = final_price/data.ethereum.usd;
                 th_price = final_price/data.tether.usd;
-                t_data[7] =  final_price.toFixed(2); 
-                t_data[8] = btc_price.toFixed(2);
-                t_data[9] = eth_price.toFixed(2);
-                t_data[10] = th_price.toFixed(2);
+                t_data[9] =  final_price.toFixed(2); 
+                t_data[10] = btc_price.toFixed(2);
+                t_data[11] = eth_price.toFixed(2);
+                t_data[12] = th_price.toFixed(2);
                 this.data(t_data)
              } )
             }
@@ -93,6 +117,58 @@
         }
 
       </script>
+      <style>
+
+        .multiselect {
+          width: 300px;
+          margin:20px;
+        }
+        
+        .selectBox {
+          position: relative;
+        }
+        
+        .selectBox select {
+          width: 100%;
+          font-weight: bold;
+        }
+        
+        .overSelect {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+        }
+        
+        #checkboxes {
+          display: none;
+          border: 1px #dadada solid;
+  
+        }
+        
+        #checkboxes label {
+          display: block;
+        }
+        
+        #checkboxes label:hover {
+          background-color: #1e90ff;
+        }
+        .grid-container-element { 
+          display: grid; 
+          grid-template-columns: 1fr 1fr; 
+          grid-gap: 20px; 
+          border: 1px solid black; 
+          width: 100%; 
+      } 
+      .grid-child-element { 
+          margin: 10px; 
+          border: 1px solid red; 
+      }
+              
+  
+      </style>
+  
     <style>
       label{display:inline-block;}
       input{display:block;}
@@ -124,7 +200,7 @@
                   <a href="{% url 'products' %}" class="nav-link">Products</a>
               </li>
               <li class="nav-item">
-                  <a href=".{% url 'all_prod' %}" class="nav-link">All Products</a>
+                  <a href="{% url 'all_prod' %}" class="nav-link">All Products</a>
               </li>
           </ul>
       </div>
@@ -170,15 +246,95 @@
       </div>
     </section>
 
-    <h3 class="text-center pt-5">All The Products</h3>
-    <div class="container pt-3">
+
+    <h3 class="text-center pt-5">All Products</strong></h3>
+    <div class="container pt-3 parent">
       <div style="float:Center;margin:20px">
 
-      <label>Fees<input type="number" name="fees" id="fees" value="0.8"/></label>
-      <label>Commission<input type="number" name="cms" id="cms" value="0.5"/></label>
+        <div class="grid-container-element">
+
+        <div class='grid-child-element'>
+
+        <label>Fees<input type="number" name="fees" id="fees" value="0.8"/></label>
+        <label>Commission<input type="number" name="cms" id="cms" value="0.5"/></label>
+
+        <input type="button" class="btn btn-primary" name="Calculate" value="Calculate" onclick="calculate()"/>
+        </div>
+
+        <div class='grid-child-element'>
+        <div class="multiselect">
+          <div class="selectBox" onclick="showCheckboxes()">
+            <select>
+              <option>Select Columns to Hide</option>
+            </select>
+            <div class="overSelect"></div>
+          </div>
+          <div id="checkboxes">
+            <label for="one">
+              <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="0" />Product Name </label>
+            <label for="one">
+              <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="1" />Price (USD) </label>
       
-      <input type="button" class="btn btn-primary" name="Calculate" value="Calculate" onclick="calculate()"/>
+              <label for="one">
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="2" />Weight </label>
+              <label for="one">
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="3" />Purity </label>
+                <label for="one">
+                  <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="4" />Manufacture </label>
+    
+              <label for="one">
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="5" />Premium(%) </label>
+              <label for="one">
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="6" />Supplier name </label>
+        
+                <label for="one">
+                  <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="7" />Supplier Country </label>
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="8" />Stock </label>
+          
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="9" />Final Price </label>
+          
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="10" />Bitcoin Price </label>
+              
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="11" />Ethereum Price </label>
+          
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="12" />Tether Price</label>
+              </div>
+            </div>
+          </div>
+          <div class='grid-child-element'>
+            <table   class="table display responsive" >
+
+                <tr>
+                  <td>Bitcoin Price</td>
+                  <td>$ {{ price_table.bitcoin.usd }}</td>
+                </tr>
+                <tr>
+                  <td>Ethereum Price</td>
+                  <td>$ {{ price_table.ethereum.usd }}</td>
+                </tr>
+                <tr>
+                  <td>Tether Price</td>
+                  <td>$ {{ price_table.tether.usd }}</td>
+                </tr>
+                <tr>
+                  <td>Spot Price</td>
+                  <td>$ {{ price_table.spot }}</td>
+                </tr>
+
+
+            </table>
+          </div>
+          </div>
+
+        </div>
       </div>
+    
+
       <table
         class="table display responsive"
         id="example"
@@ -194,14 +350,14 @@
             <th>Purity</th>
             <th>Manufacture</th>
             <th>Premium %</th>
+            <th>Supplier Name</th>
+            <th>Supplier Country</th>
             <th>Stock</th>
-            <th>Premium(%)</th>
             <th>Final Price</th>
             <th>Bitcoin Price</th>
             <th>Ethereum Price</th>
             <th>Tether Price</th>
             {% comment %} <th>Product URL</th> {% endcomment %}
-            <th>Supplier Country</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -216,14 +372,15 @@
                <td> {{ i.purity }} </td>
                <td> {{ i.manufacture }} </td>
                <td>{{ i.premium }}</td>
+               <td> {{ i.supplier_name }} </td>
+               <td> {{ i.supplier_country }} </td>
+
                <td>{{ i.stock }}</td>
                <th>{{ i.Final_Price|floatformat:2 }}</th>
                <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>
                <th>{{ i.Ethereum_Price|floatformat:2 }}</th>
                <th>{{ i.Tether_Price|floatformat:2 }}</th>
    
-               {% comment %} <td><a href="{{ i.product_url }}" >{{ i.product_url|slice:":10" }} </a></td> {% endcomment %}
-               <td> {{ i.supplier_country }} </td>
 
           </tr>
    {% endfor %}

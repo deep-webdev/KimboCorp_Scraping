@@ -153,7 +153,18 @@
         #checkboxes label:hover {
           background-color: #1e90ff;
         }
-        
+        .grid-container-element { 
+          display: grid; 
+          grid-template-columns: 1fr 1fr; 
+          grid-gap: 20px; 
+          border: 1px solid black; 
+          width: 100%; 
+      } 
+      .grid-child-element { 
+          margin: 10px; 
+          border: 1px solid red; 
+      }
+              
   
       </style>
   
@@ -188,7 +199,7 @@
                   <a href="{% url 'products' %}" class="nav-link">Products</a>
               </li>
               <li class="nav-item">
-                  <a href=".{% url 'all_prod' %}" class="nav-link">All Products</a>
+                  <a href="{% url 'all_prod' %}" class="nav-link">All Products</a>
               </li>
           </ul>
       </div>
@@ -234,60 +245,92 @@
       </div>
     </section>
 
+
     <h3 class="text-center pt-5">Products From Cheapest Supplier - <strong>{{ name }}</strong></h3>
-    <div class="container pt-3">
+    <div class="container pt-3 parent">
       <div style="float:Center;margin:20px">
 
-      <label>Fees<input type="number" name="fees" id="fees" value="0.8"/></label>
-      <label>Commission<input type="number" name="cms" id="cms" value="0.5"/></label>
+        <div class="grid-container-element">
 
-      <input type="button" class="btn btn-primary" name="Calculate" value="Calculate" onclick="calculate()"/>
-      </div>
+        <div class='grid-child-element'>
 
-      <div class="multiselect">
-        <div class="selectBox" onclick="showCheckboxes()">
-          <select>
-            <option>Select Columns to Display</option>
-          </select>
-          <div class="overSelect"></div>
+        <label>Fees<input type="number" name="fees" id="fees" value="0.8"/></label>
+        <label>Commission<input type="number" name="cms" id="cms" value="0.5"/></label>
+
+        <input type="button" class="btn btn-primary" name="Calculate" value="Calculate" onclick="calculate()"/>
         </div>
-        <div id="checkboxes">
-          <label for="one">
-            <input type="checkbox" id="one" class="toggle-vis" data-column="0" />Product Name </label>
-          <label for="one">
-            <input type="checkbox" id="one" class="toggle-vis" data-column="1" />Price (USD) </label>
-    
+
+        <div class='grid-child-element'>
+        <div class="multiselect">
+          <div class="selectBox" onclick="showCheckboxes()">
+            <select>
+              <option>Select Columns to Hide</option>
+            </select>
+            <div class="overSelect"></div>
+          </div>
+          <div id="checkboxes">
             <label for="one">
-              <input type="checkbox" id="one" class="toggle-vis" data-column="2" />Weight </label>
+              <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="0" />Product Name </label>
             <label for="one">
-              <input type="checkbox" id="one" class="toggle-vis" data-column="3" />Purity </label>
-              <label for="one">
-                <input type="checkbox" id="one" class="toggle-vis" data-column="4" />Manufacture </label>
-  
-            <label for="one">
-              <input type="checkbox" id="one" class="toggle-vis" data-column="5" />Premium(%) </label>
-            <label for="one">
-              <input type="checkbox" id="one" class="toggle-vis" data-column="6" />Supplier name </label>
+              <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="1" />Price (USD) </label>
       
               <label for="one">
-                <input type="checkbox" id="one" class="toggle-vis" data-column="7" />Supplier Country </label>
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="2" />Weight </label>
+              <label for="one">
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="3" />Purity </label>
                 <label for="one">
-                  <input type="checkbox" id="one" class="toggle-vis" data-column="8" />Stock </label>
+                  <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="4" />Manufacture </label>
+    
+              <label for="one">
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="5" />Premium(%) </label>
+              <label for="one">
+                <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="6" />Supplier name </label>
         
                 <label for="one">
-                  <input type="checkbox" id="one" class="toggle-vis" data-column="9" />Final Price </label>
-        
-                <label for="one">
-                  <input type="checkbox" id="one" class="toggle-vis" data-column="10" />Bitcoin Price </label>
-            
-                <label for="one">
-                  <input type="checkbox" id="one" class="toggle-vis" data-column="11" />Ethereum Price </label>
-        
-                <label for="one">
-                  <input type="checkbox" id="one" class="toggle-vis" data-column="12" />Tether Price</label>
+                  <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="7" />Supplier Country </label>
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="8" />Stock </label>
+          
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="9" />Final Price </label>
+          
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="10" />Bitcoin Price </label>
               
-                              
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="11" />Ethereum Price </label>
+          
+                  <label for="one">
+                    <input type="checkbox" id="one" style="display:inline" class="toggle-vis" data-column="12" />Tether Price</label>
+              </div>
             </div>
+          </div>
+          <div class='grid-child-element'>
+            <table   class="table display responsive" >
+
+                <tr>
+                  <td>Bitcoin Price</td>
+                  <td>$ {{ price_table.bitcoin.usd }}</td>
+                </tr>
+                <tr>
+                  <td>Ethereum Price</td>
+                  <td>$ {{ price_table.ethereum.usd }}</td>
+                </tr>
+                <tr>
+                  <td>Tether Price</td>
+                  <td>$ {{ price_table.tether.usd }}</td>
+                </tr>
+                <tr>
+                  <td>Spot Price</td>
+                  <td>$ {{ price_table.spot }}</td>
+                </tr>
+
+
+            </table>
+          </div>
+          </div>
+
+        </div>
       </div>
     
 
