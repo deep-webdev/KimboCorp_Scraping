@@ -1,9 +1,7 @@
-{% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    {% comment %} {% load static %} {% endcomment %}
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -121,7 +119,19 @@
 
         .multiselect {
           width: 300px;
-          margin:20px;
+          margin-left:0px;
+          overflow-y: auto;
+
+        }
+
+        @media screen and (max-width: 767px) {
+        .multiselect {
+            width: 100%;
+            margin: auto;
+            overflow-x: hidden;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+            font-size: 10px;
+            white-space: nowrap;
         }
         
         .selectBox {
@@ -159,21 +169,63 @@
           grid-template-columns: 1fr 1fr; 
           grid-gap: 20px; 
           border: 1px solid black; 
-          width: 100%; 
+          width: 100%;
+          overflow-x: auto;
       } 
       .grid-child-element { 
           margin: 10px; 
-          border: 1px solid red; 
+          border: 1px solid red;
+          overflow-x: auto; 
       }
-              
-  
-      </style>
-  
-    <style>
-      label{display:inline-block;}
-      input{display:block;}
 
-    </style>
+      .table-responsive {
+      min-height: .01%;
+      overflow-x: auto;
+      }
+
+      @media screen and (max-width: 767px) {
+      .table-responsive {
+          width: 100%;
+          margin-bottom: 15px;
+          overflow-y: hidden;
+          -ms-overflow-style: -ms-autohiding-scrollbar;
+          border: 1px solid #ddd;
+          font-size: 12px;
+      }
+      .table-responsive > .table {
+          margin-bottom: 0;
+      }
+      .table-responsive > .table > thead > tr > th,
+      .table-responsive > .table > tbody > tr > th,
+      .table-responsive > .table > tfoot > tr > th,
+      .table-responsive > .table > thead > tr > td,
+      .table-responsive > .table > tbody > tr > td,
+      .table-responsive > .table > tfoot > tr > td {
+          white-space: nowrap;
+        }
+      }
+      .bitcoin-table{
+        width:100%;
+        overflow-x: auto;
+      }
+
+      @media screen and (max-width: 767px) {
+      .bitcoin-table {
+          width: 100%;
+          margin: auto;
+          overflow-y: hidden;
+          -ms-overflow-style: -ms-autohiding-scrollbar;
+          border: 1px solid #ddd;
+          font-size: 11px;
+      }
+
+      label{
+        display:inline-block;
+      }
+      input{
+        display:block;
+      }         
+      </style>
     </head>
 
   <body>
@@ -223,7 +275,7 @@
               facere tempore suscipit quae nobis harum aut assumenda similique
               debitis cumque totam id!
             </p>
-            <a class="btn btn-warning btn-lg" href="./allProducts.html">
+            <a class="btn btn-warning btn-lg" href="{% url 'all_prod' %}">
               All Products
             </a>
           </div>
@@ -307,8 +359,8 @@
             </div>
           </div>
           <div class='grid-child-element'>
-            <table   class="table display responsive" >
-
+            <div class="bitcoin-table">
+            <table class="table table-striped table-bordered" >
                 <tr>
                   <td>Bitcoin Price</td>
                   <td>$ {{ price_table.bitcoin.usd }}</td>
@@ -325,9 +377,8 @@
                   <td>Spot Price</td>
                   <td>$ {{ price_table.spot }}</td>
                 </tr>
-
-
             </table>
+            </div>
           </div>
           </div>
 
@@ -335,59 +386,58 @@
       </div>
     
 
-      <table
-        class="table display responsive"
-        id="example"
-      >
-        <thead id="example" class="alert alert-warning">
-          <!--Table columns go here-->
-          <tr>
-            {% comment %} <th>Product Id</th> {% endcomment %}
+      <div class="table-responsive">
+        <table
+          class="table table-striped table-bordered" id="example">
+          <thead id="example" class="alert alert-warning">
+            <!--Table columns go here-->
+            <tr>
+              {% comment %} <th>Product Id</th> {% endcomment %}
 
-            <th>Product Name</th>
-            <th>Price (USD)</th>
-            <th>Weight</th>
-            <th>Purity</th>
-            <th>Manufacture</th>
-            <th>Premium %</th>
-            <th>Supplier Name</th>
-            <th>Supplier Country</th>
-            <th>Stock</th>
-            <th>Final Price</th>
-            <th>Bitcoin Price</th>
-            <th>Ethereum Price</th>
-            <th>Tether Price</th>
-            {% comment %} <th>Product URL</th> {% endcomment %}
-        </tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- Table rows go here -->
-          {% for i in data %}
-          <tr>
-            {% comment %} <td> {{ i.product_id }} </td> {% endcomment %}
-
-               <td><a href="{{ i.product_url }}" >{{ i.product_name }} </a> </td>
-               <td> {{ i.price_usd }} </td>
-               <td> {{ i.weight }} </td>
-               <td> {{ i.purity }} </td>
-               <td> {{ i.manufacture }} </td>
-               <td>{{ i.premium }}</td>
-               <td> {{ i.supplier_name }} </td>
-               <td> {{ i.supplier_country }} </td>
-
-               <td>{{ i.stock }}</td>
-               <th>{{ i.Final_Price|floatformat:2 }}</th>
-               <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>
-               <th>{{ i.Ethereum_Price|floatformat:2 }}</th>
-               <th>{{ i.Tether_Price|floatformat:2 }}</th>
-   
-
+              <th>Product Name</th>
+              <th>Price (USD)</th>
+              <th>Weight</th>
+              <th>Purity</th>
+              <th>Manufacture</th>
+              <th>Premium %</th>
+              <th>Supplier Name</th>
+              <th>Supplier Country</th>
+              <th>Stock</th>
+              <th>Final Price</th>
+              <th>Bitcoin Price</th>
+              <th>Ethereum Price</th>
+              <th>Tether Price</th>
+              {% comment %} <th>Product URL</th> {% endcomment %}
           </tr>
-   {% endfor %}
-        </tbody>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Table rows go here -->
+            {% for i in data %}
+            <tr>
+              {% comment %} <td> {{ i.product_id }} </td> {% endcomment %}
 
-      </table>
-    </div>
+                <td><a href="{{ i.product_url }}" >{{ i.product_name }} </a> </td>
+                <td> {{ i.price_usd }} </td>
+                <td> {{ i.weight }} </td>
+                <td> {{ i.purity }} </td>
+                <td> {{ i.manufacture }} </td>
+                <td>{{ i.premium }}</td>
+                <td> {{ i.supplier_name }} </td>
+                <td> {{ i.supplier_country }} </td>
+
+                <td>{{ i.stock }}</td>
+                <th>{{ i.Final_Price|floatformat:2 }}</th>
+                <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>
+                <th>{{ i.Ethereum_Price|floatformat:2 }}</th>
+                <th>{{ i.Tether_Price|floatformat:2 }}</th>
+    
+
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
 
     <!--Footer-->
     <footer
@@ -396,6 +446,4 @@
     <div class="text-light p-4">Gold Data Scraping</div>
   </footer>
   </body>
-  <!-- scripts -->
-  {% comment %} <script type="module" src={% static 'js/index.js %}></script> {% endcomment %}
 </html>

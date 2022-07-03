@@ -1,9 +1,7 @@
-{% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    {% comment %} {% load static %} {% endcomment %}
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -123,6 +121,33 @@
       #checkboxes label:hover {
         background-color: #1e90ff;
       }
+
+      .table-responsive {
+      min-height: .01%;
+      overflow-x: auto;
+      }
+
+      @media screen and (max-width: 767px) {
+      .table-responsive {
+          width: 100%;
+          margin-bottom: 15px;
+          overflow-y: hidden;
+          -ms-overflow-style: -ms-autohiding-scrollbar;
+          border: 1px solid #ddd;
+          font-size: 12px;
+      }
+      .table-responsive > .table {
+          margin-bottom: 0;
+      }
+      .table-responsive > .table > thead > tr > th,
+      .table-responsive > .table > tbody > tr > th,
+      .table-responsive > .table > tfoot > tr > th,
+      .table-responsive > .table > thead > tr > td,
+      .table-responsive > .table > tbody > tr > td,
+      .table-responsive > .table > tfoot > tr > td {
+          white-space: nowrap;
+        }
+      }
       
 
     </style>
@@ -175,7 +200,7 @@
               facere tempore suscipit quae nobis harum aut assumenda similique
               debitis cumque totam id!
             </p>
-            <a class="btn btn-warning btn-lg" href="./allProducts.html">
+            <a class="btn btn-warning btn-lg" href="{% url 'all_prod' %}">
               All Products
             </a>
           </div>
@@ -230,9 +255,9 @@
   </div>
 
 
-    <div class="container pt-3">
+    <div class="table-responsive">
       <table
-        class="table table-striped table-bordered table-responsive"
+        class="table table-striped table-bordered"
         id="example"
       >
         <thead id="tableHeader" class="alert alert-warning">
@@ -249,9 +274,11 @@
             <th>Purity</th>
             {% comment %} <th>Manufacture</th> {% endcomment %}
             <th>Premium(%)</th>
+
             {% comment %} <th>Product URL</th> {% endcomment %}
             <th>Supplier name</th>
             <th>Supplier Country</th>
+            <th>Stock</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -272,28 +299,11 @@
                {% comment %} <td><a href="{{ i.product_url }}" >{{ i.product_url|slice:":10" }} </a></td> {% endcomment %}
                <td> {{ i.supplier_name }} </td>
                <td> {{ i.supplier_country }} </td>
+               <td> {{ i.stock }}</td>
 
           </tr>
-   {% endfor %}
+        {% endfor %}
         </tbody>
-        {% comment %} <tfoot>
-          <tr>
-            <th>Product Id</th>
-
-              <th>Product Name</th>
-              <th>Price</th>
-              <th>Crypto Price</th>
-              <th>CC/PayPal Price</th>
-              <th>Weight</th>
-              <th>Metal Content</th>
-              <th>Purity</th>
-              <th>Manufacture</th>
-              <th>Product URL</th>
-              <th>Supplier name</th>
-              <th>Supplier Country</th>
-          </tr>
-      </tfoot> {% endcomment %}
-
       </table>
     </div>
 
@@ -304,6 +314,4 @@
     <div class="text-light p-4">Gold Data Scraping</div>
   </footer>
   </body>
-  <!-- scripts -->
-  {% comment %} <script type="module" src={% static 'js/index.js %}></script> {% endcomment %}
 </html>
