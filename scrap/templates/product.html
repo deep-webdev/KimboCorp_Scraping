@@ -73,6 +73,7 @@
         </script>
 
       <script>
+
         function calculate(){
           fees = document.getElementById('fees').value;
           cms = document.getElementById('cms').value;
@@ -119,9 +120,71 @@
 
         .multiselect {
           width: 300px;
-          margin:20px;
+          margin:auto;
+          margin: auto;
+          overflow-x: hidden;
+          -ms-overflow-style: -ms-autohiding-scrollbar;
+          font-size: 16px;
+          white-space: nowrap;
+
         }
         
+        {% comment %} @media screen and (max-width: 767px) {
+          .multiselect {
+              width: 100%;
+              margin: auto;
+              overflow-x: hidden;
+              -ms-overflow-style: -ms-autohiding-scrollbar;
+              font-size: 10px;
+              white-space: nowrap;
+          }
+   {% endcomment %}
+
+   .grid,
+   .subgrid {
+     display: grid;
+     grid-template-columns: minmax(0, 1fr);
+   }
+
+   .grid {
+     grid-template-areas:
+     'header'
+     'main'
+     'aside'
+     'footer';
+     width: 100%;
+   }
+
+   .subgrid {
+     width: calc(100% + 2rem);
+     margin: 0 -1rem;
+   }
+
+   .grid-item,
+   .subgrid-item {
+     padding: 1rem;
+   }
+
+   @media all and (min-width: 576px) {
+     .subgrid {
+       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+       margin-bottom: 1rem;
+     }
+     .subgrid-item {
+       padding-bottom: 0.25rem;
+     }
+   }
+
+   @media all and (min-width: 992px) { 
+     .grid {
+       grid-template-areas:
+         'header header header'
+         'main main aside'
+         'footer footer footer';
+       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+     }
+   }
+
         .selectBox {
           position: relative;
         }
@@ -164,6 +227,13 @@
           border: 1px solid red; 
       }
 
+      @media screen and (max-width: 767px) {
+      
+      .grid-child-element{
+        display:block
+      }
+      }
+
       .table-responsive {
       min-height: .01%;
       overflow-x: auto;
@@ -197,7 +267,17 @@
       input{
         display:block;
       }
-  
+      
+      {% comment %} @media screen and (min-width: 767px) {
+        .bitcoin-table {
+            width: 100%;
+            margin: auto;
+            overflow-y: hidden;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+            border: 1px solid #ddd;
+            font-size: 11px;
+        }
+   {% endcomment %}
       </style>
     </head>
 
@@ -276,9 +356,12 @@
     <div class="container pt-3 parent">
       <div style="float:Center;margin:20px">
 
-        <div class="grid-container-element">
+        <div class="grid">
+          <main role="main" class="grid-item">        
 
-        <div class='grid-child-element'>
+        <div class='subgrid'>
+
+          <div class="subgrid-item">
 
         <label>Fees<input type="number" name="fees" id="fees" value="0.8"/></label>
         <label>Commission<input type="number" name="cms" id="cms" value="0.5"/></label>
@@ -286,8 +369,11 @@
         <input type="button" class="btn btn-primary" name="Calculate" value="Calculate" onclick="calculate()"/>
         </div>
 
-        <div class='grid-child-element'>
-        <div class="multiselect">
+      </div>
+      <div class='subgrid'>
+
+        <div class="subgrid-item">
+      <div class="multiselect">
           <div class="selectBox" onclick="showCheckboxes()">
             <select>
               <option>Select Columns to Hide</option>
@@ -331,8 +417,11 @@
               </div>
             </div>
           </div>
-          <div class='grid-child-element'>
-            <div class="table-responsive">
+        </div>
+      </main>
+      <div class="bitcoin-table">
+
+          <div class="table table-striped table-bordered">
             <table class="table" >
 
                 <tr>
@@ -356,7 +445,7 @@
             </table>
             </div>
           </div>
-          </div>
+        </div>
 
         </div>
       </div>

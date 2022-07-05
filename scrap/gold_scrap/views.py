@@ -95,5 +95,6 @@ def all_supp_products(request):
      price_table = get_price_table()
      for i in result_list:
           if 'oz' in i.weight:
+               print(i)
                i.weight = str(price_table['spot'] * convert_to_float(i.weight.split(" ")[0])) + ' g'
      return render(request, 'allProducts.html', {'data': result_list, 'price_table':price_table})
