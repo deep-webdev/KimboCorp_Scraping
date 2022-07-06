@@ -288,7 +288,15 @@
             <td> {{ i.product_id }} </td>
 
                <td><a href="{{ i.product_url }}" >{{ i.product_name }} </a> </td>
+               {% if i.price_usd == "NA" %}
+
+               <td> {{ i.price_usd }} </td>
+
+               {% else %}
                <td> {{ i.price_usd|floatformat:2 }} </td>
+
+               {% endif %}
+               
                {% comment %} <td> {{ i.crypto_price }} </td>
                <td> {{ i.paypal_price }} </td> {% endcomment %}
                <td> {{ i.weight }} </td>
