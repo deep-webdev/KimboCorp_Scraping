@@ -54,7 +54,7 @@ def apmex():
   apmex_data['Metal Content']=soup.find("ul", {"class": "product-table left"}).get_text().split("\n")[6].split(":")[1].strip()
   apmex_data['Purity'] = soup.find_all("ul", {"class": "product-table"})[1].get_text().split("\n")[1].split(":")[1].strip()
   apmex_data['Manufacture'] = None
-  apmex_data['Product URL'] = url
+  apmex_data['Product URL'] = 'https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints'
   apmex_data['Supplier name'] = 'APMEX'
   apmex_data['Supplier Country'] = 'Singapore'
   apmex_data['Weight'] = '1000 G'
@@ -373,15 +373,8 @@ def main_update():
   cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12] + [cols[12]]
   df_final = df_final[cols]
   df_final.fillna('NA',inplace=True)
-  df_final['Price'] = df_final['Price'].replace(' ',0)
-  df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA',0)
-  df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA',0)
-  df_final['Price'] = df_final['Price'].astype(float).astype(int)
-  df_final['Crypto Price'] = df_final['Crypto Price'].astype(int)
-  df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].astype(int)
-  df_final['Price'] = df_final['Price'].replace(0,'NA')
-  df_final['Crypto Price'] = df_final['Crypto Price'].replace(0,'NA')
-  df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace(0,'NA')
+  df_final.loc[df_final['Price'] == "NA", 'Stock'] = 'Out of Stock'
+  df_final.loc[df_final['Price'] != "NA", 'Stock'] = 'In Stock'
   df_records = df_final.to_dict('records')
   model_instances = [Extracted(
       product_name=record['Product Name'],
@@ -396,7 +389,8 @@ def main_update():
       manufacture = record['Manufacture'],
       product_url = record['Product URL'],
       supplier_name= record['Supplier name'],
-      supplier_country = record['Supplier Country']
+      supplier_country = record['Supplier Country'],
+      stock = record['Stock']
   ) for record in df_records]
 
   Extracted.objects.all().delete()

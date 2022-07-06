@@ -288,7 +288,7 @@
             <td> {{ i.product_id }} </td>
 
                <td><a href="{{ i.product_url }}" >{{ i.product_name }} </a> </td>
-               <td> {{ i.price_usd }} </td>
+               <td> {{ i.price_usd|floatformat:2 }} </td>
                {% comment %} <td> {{ i.crypto_price }} </td>
                <td> {{ i.paypal_price }} </td> {% endcomment %}
                <td> {{ i.weight }} </td>
