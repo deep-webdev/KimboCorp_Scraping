@@ -54,7 +54,7 @@ def apmex():
   apmex_data['Metal Content']=soup.find("ul", {"class": "product-table left"}).get_text().split("\n")[6].split(":")[1].strip()
   apmex_data['Purity'] = soup.find_all("ul", {"class": "product-table"})[1].get_text().split("\n")[1].split(":")[1].strip()
   apmex_data['Manufacture'] = None
-  apmex_data['Product URL'] = url
+  apmex_data['Product URL'] = 'https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints'
   apmex_data['Supplier name'] = 'APMEX'
   apmex_data['Supplier Country'] = 'Singapore'
   apmex_data['Weight'] = '1000 G'
