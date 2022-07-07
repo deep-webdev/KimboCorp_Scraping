@@ -159,20 +159,20 @@ def bullionstar():
 
 def indigopreciousmetals():
   data = scraping('https://www.indigopreciousmetals.com/bullion-products/gold/gold-bars/1-kilo-gold-lbma-good-delivery-bars-indigo-precious-metals.html')
-  df = data[0][-1]
+  df = data[0]
   soup = data[1]
   indigo = {}
   indigo['Product Name'] = soup.find("div", {"class": "product-name"}).get_text().split("\n")[1]
   try:
     indigo['Crypto Price'] = None
-    indigo['Price'] = float(soup.find("span", {"id": "product-minimal-price-1805"}).get_text(strip=True).split(" ")[0].replace(",", ""))
+    indigo['Price'] = float(df[0]['Prices'][0].split('USD')[0].strip().replace(",",""))
     indigo['CC/PayPal Price'] = None
     unit_price = spot * 32.15
     difference = abs(int(indigo['Price']) - unit_price)
     indigo['Premium'] = round((difference / unit_price) * 100, 2)
   except:
     indigo['Crypto Price'] = None
-    indigo['Price'] = None
+    indigo['Price'] = float(soup.find_all('span','price')[5].get_text().split()[0].replace(",",""))
     indigo['CC/PayPal Price'] = None
     indigo['Premium'] = None
   indigo['Product Id']= None
