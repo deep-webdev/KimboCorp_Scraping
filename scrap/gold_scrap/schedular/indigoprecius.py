@@ -62,7 +62,8 @@ def indigofetch(url):
         content = convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274 *1000
     elif 'grams' in indigo['Metal Content'].split():
         content = convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274
-
+ 
+    indigo['Weight'] = float(convert_to_float(content)) * (1/0.035274) + 'grams'
     unit_price = float(spot) * float(convert_to_float(content))
     if indigo['Price']: 
         difference = abs(int(indigo['Price']) - unit_price)
@@ -83,7 +84,6 @@ def indigofetch(url):
     indigo['Product URL'] = url
     indigo['Supplier name'] = 'Indigo precious metals'
     indigo['Supplier Country'] = 'Singapore'
-    indigo['Weight'] = indigo['Metal Content']
     return indigo
 
 def indigo():
