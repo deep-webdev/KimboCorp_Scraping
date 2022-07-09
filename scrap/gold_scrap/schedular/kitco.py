@@ -87,7 +87,7 @@ def kitco(url):
     elif 'g' in kitco['Metal Content'].split():
         content = convert_to_float(kitco['Metal Content'].split()[0]) * 0.035274
 
-    kitco['Weight'] = float(convert_to_float(content)) * (1/0.035274) + 'grams'
+    kitco['Weight'] = str(float(convert_to_float(content)) * (1/0.035274)) + 'grams'
     unit_price = float(spot) * float(convert_to_float(content))
     if kitco['Price']: 
         difference = abs(int(kitco['Price']) - unit_price)
