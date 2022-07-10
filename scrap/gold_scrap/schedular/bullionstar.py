@@ -24,9 +24,8 @@ def update_data():
     df_final['Crypto Price'] = 'NA'
     df_final['CC/PayPal Price'] = 'NA'
     df_final['Supplier name'] = "Bullion Star"
-    df_final['Weight'].replace(to_replace=['g','gram'],value="grams",inplace=True)
-    df_final['Weight'] = df_final['Weight'].apply(lambda x : (str(x.split()[0] *1000) + 'grams') if 'kg' in x.split() else x )
-
+    # df_final.fillna('NA',inplace=True)
+    # df_records = df_final.to_dict('records')
     df_final['Status'].replace(to_replace="IN_STOCK",value="In Stock",inplace=True)
     df_final['Status'].replace(to_replace="UNAVAILABLE",value="Out of Stock",inplace=True)
     df_final.fillna('NA',inplace=True)

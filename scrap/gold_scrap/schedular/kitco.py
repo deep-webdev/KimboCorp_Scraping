@@ -87,12 +87,12 @@ def kitco(url):
     elif 'g' in kitco['Metal Content'].split():
         content = convert_to_float(kitco['Metal Content'].split()[0]) * 0.035274
 
-    kitco['Weight'] = str(float(convert_to_float(content)) * (1/0.035274)) + 'grams'
+    # kitco['Weight'] = str(float(convert_to_float(content)) * (1/0.035274)) + 'grams'
     unit_price = float(spot) * float(convert_to_float(content))
     if kitco['Price']: 
         difference = abs(int(kitco['Price']) - unit_price)
         kitco['Premium'] = round((difference / unit_price) * 100, 2)
-    else:   
+    else:
         kitco['Premium'] = 'NA'
 
     kitco['Product Id'] = None
@@ -101,7 +101,7 @@ def kitco(url):
     kitco['Supplier name'] = "Kitco"
     kitco['Manufacture'] = None
     kitco['Purity'] = soup.find("ul", {"id": "prod_details_list"}).get_text().split('Fineness:')[1].strip().split('\r')[0]
-     
+    kitco['Weight'] = soup.find("span", {"property": "weight"}).get_text().strip()
     return kitco
 
 def update_data():
