@@ -6,4 +6,5 @@ class GoldScrapConfig(AppConfig):
     name = 'gold_scrap'
     def ready(self):
         from gold_scrap.schedular import updater
+        print("Updater Started ....")
         updater.start()
