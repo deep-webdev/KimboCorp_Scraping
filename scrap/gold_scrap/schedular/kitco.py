@@ -102,6 +102,10 @@ def kitco(url):
     kitco['Manufacture'] = None
     kitco['Purity'] = soup.find("ul", {"id": "prod_details_list"}).get_text().split('Fineness:')[1].strip().split('\r')[0]
     kitco['Weight'] = soup.find("span", {"property": "weight"}).get_text().strip()
+    if 'oz' in kitco['Weight'].split():
+      kitco['Weight'] = str(round(convert_to_float(kitco['Weight'].split()[0]) * spot, 2)) + " grams"
+    elif 'g' in kitco['Weight'].split():
+      kitco['Weight'] = str(round(convert_to_float(kitco['Weight'].split()[0]) * spot, 2)) + " grams"
     return kitco
 
 def update_data():
