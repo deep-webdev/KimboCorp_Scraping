@@ -59,57 +59,52 @@ def convert_to_float(frac_str):
 
 def goldcentral(url):
     try:
-        data = scraping(url)
+        data = scraping(url[0])
         dfs = data[0][3]
         soup = data[1]
+        spot = troy_to_price()
         c = CurrencyRates()
         Currency = c.get_rate('SGD', 'USD')
         goldcentral = {}
         goldcentral['Product Name'] = soup.find("h1", {"class": "product_title entry-title"}).get_text()
-
         try:
             goldcentral['Price'] = float(soup.find("span", {"class":"amount"}).get_text().replace('$','').replace(',',''))
-            goldcentral['SGD Price'] =  goldcentral['Price']
-            goldcentral['Price'] = Currency * goldcentral['Price']
+            goldcentral['Price'] = round(Currency * goldcentral['Price'])
         except:  
             goldcentral['Price'] = None
-            goldcentral['SGD Price'] = None
         goldcentral['Crypto Price'] = None
         goldcentral['CC/PayPal Price'] = None
+        if goldcentral['Price']:
+            goldcentral['Stock'] = "In Stock"
+        else:
+            goldcentral['Stock'] = "Out Of Stock"
+        goldcentral['Product Id'] = None
         try:
             goldcentral['Metal Content'] = soup.find("td", {"class":"product_weight"}).get_text()
             content = convert_to_float(goldcentral['Metal Content'].split()[0])
         except:  
             goldcentral['Metal Content'] = None
             content = 0
-        unit_price = float(spot) * float(convert_to_float(content))
-        
-        if goldcentral['Price'] and content != 0: 
-            difference = abs(int(goldcentral['Price']) - unit_price)
-            goldcentral['Premium'] = round((difference / unit_price) * 100, 2)
-        else:   
-            goldcentral['Premium'] = 'NA'
-
-        if goldcentral['Price']:
-            goldcentral['Stock'] = "In Stock"
-        else:
-            goldcentral['Stock'] = "Out Of Stock"
-
-        goldcentral['Supplier Country'] = "Singapore"
-        goldcentral['Product URL'] = url
-        goldcentral['Manufacture'] = None
-        try:
-            purity = soup.find("div", {"class":"kw-details-desc"}).get_text().split('purity of')[1].split('%')[0]
-            goldcentral['Purity'] = float(purity.strip()) * 100
-        except:
-            goldcentral['Purity'] = None
-        goldcentral['Supplier name'] = "Gold Silver Central"
-        goldcentral['Product Id'] = None
         try:
             goldcentral['Weight'] = soup.find("td", {"class":"product_weight"}).get_text()
             goldcentral['Weight'] = str(round(float(goldcentral['Weight'].split('oz')[0]) * 31.103, 2)) + " " + "grams"
         except: 
             goldcentral['Weight'] = None
+        unit_price = float(spot) * float(convert_to_float(content))
+        if goldcentral['Price'] and content != 0: 
+            difference = abs(int(goldcentral['Price']) - unit_price)
+            goldcentral['Premium'] = round((difference / unit_price) * 100, 2)
+        else:   
+            goldcentral['Premium'] = 'NA'
+        try:
+            purity = soup.find("div", {"class":"kw-details-desc"}).get_text().split('purity of')[1].split('%')[0]
+            goldcentral['Purity'] = float(purity.strip()) * 100
+        except:
+            goldcentral['Purity'] = None
+        goldcentral['Manufacture'] = None
+        goldcentral['Product URL'] = url[0]
+        goldcentral['Supplier name'] = "Gold Silver Central"
+        goldcentral['Supplier Country'] = "Singapore"
     except Exception as e: 
         print('line 106 ------'+str(e))    
     try:

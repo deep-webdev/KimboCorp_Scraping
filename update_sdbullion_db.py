@@ -58,26 +58,32 @@ def convert_to_float(frac_str):
 
 def sdb(url):
     try:
-        data = scraping(url)
+        data = scraping(url[0])
         df = data[0]
         soup = data[1]
         sbul = {}
         spot = troy_to_price()
         try:
-            sbul['Product name'] = soup.find("h1", {'class': 'page-title'}).get_text()
+            sbul['Product Name'] = soup.find("h1", {'class': 'page-title'}).get_text()
         except:
-            sbul['Product name'] = "NA"
-        
-        if not soup.find('p', {'class': 'currently-out-of-stock'}):
-            sbul['Price'] = float(df[0]['Check / Wire'][0].split("$")[1].replace(",",""))
-            sbul['Crypto Price'] = float(df[0]['Bitcoin'][0].split("$")[1].replace(",",""))
-            sbul['Credit/Paypal Price'] = float(df[0]['Credit / PayPal'][0].split("$")[1].replace(",",""))
-            sbul['Stock'] = "In stock"
-        else:
+            sbul['Product Name'] = "NA"
+        try:
+            if not soup.find('p', {'class': 'currently-out-of-stock'}):
+                sbul['Price'] = float(df[0]['Check / Wire'][0].split("$")[1].replace(",",""))
+                sbul['Crypto Price'] = float(df[0]['Bitcoin'][0].split("$")[1].replace(",",""))
+                sbul['CC/PayPal Price'] = float(df[0]['Credit / PayPal'][0].split("$")[1].replace(",",""))
+                sbul['Stock'] = "In stock"
+            else:
+                sbul['Price'] = None
+                sbul['Crypto Price'] = None
+                sbul['CC/PayPal Price'] = None
+                sbul['Stock'] = "Out of Stock"
+        except:
             sbul['Price'] = None
             sbul['Crypto Price'] = None
-            sbul['Credit/Paypal Price'] = None
+            sbul['CC/PayPal Price'] = None
             sbul['Stock'] = "Out of Stock"
+        sbul['Product Id'] = None
         sbul['Metal content'] = df[-1][1][3]
         wz = 0
         unit_price = 0
@@ -103,17 +109,16 @@ def sdb(url):
             else:
                 sbul['Premium'] = None    
         except:
-            sbul['Premium'] = None
             sbul['Weight'] = None
+            sbul['Premium'] = None
         try:
             sbul['Purity'] = df[-1][1][5]
         except:
             sbul['Purity'] = None
-
-        sbul['Metal type'] = df[-1][1][0]
-        sbul['Product URL'] = url
         sbul['Manufacture'] = None
+        sbul['Product URL'] = url[0]
         sbul['Supplier Country'] = "USA"
+        sbul['Supplier name'] = "SD Bullion"
     except Exception as e: 
         print('line 106 ------'+str(e))    
     try:

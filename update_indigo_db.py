@@ -60,17 +60,22 @@ def convert_to_float(frac_str):
 def indigofetch(url):
     try:
         spot = troy_to_price()
-        data = scraping(url)
+        data = scraping(url[0])
         df = data[0]
         soup = data[1]
         indigo = {}
         indigo['Product Name'] = soup.find("div", {"class": "product-name"}).get_text().split("\n")[1]
-        indigo['Crypto Price'] = None
         try:
             indigo['Price'] = float(df[0]['Prices'][0].split('USD')[0].strip().replace(",",""))
+            indigo['Crypto Price'] = None
         except:
             indigo['Price'] = float(soup.find_all('span','price')[5].get_text().split()[0].replace(",",""))
+            indigo['Crypto Price'] = None
         indigo['CC/PayPal Price'] = None
+        if indigo['Price']:
+            indigo['Stock'] = "In Stock"
+        else:
+            indigo['Stock'] = "Out Of Stock"
         indigo['Product Id']= None
         indigo['Metal Content']= soup.find("div", {"class":"specifications"}).get_text(strip=True).split('Country')[0].split('Weight')[1]
 
@@ -78,7 +83,7 @@ def indigofetch(url):
             content = convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274 *1000
         elif 'grams' in indigo['Metal Content'].split():
             content = convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274
-
+        indigo['Weight'] = indigo['Metal Content']
         # indigo['Weight'] = str(float(convert_to_float(content)) * (1/0.035274)) + 'grams'
         unit_price = float(spot) * float(convert_to_float(content))
         if indigo['Price']: 
@@ -86,23 +91,19 @@ def indigofetch(url):
             indigo['Premium'] = round((difference / unit_price) * 100, 2)
         else:   
             indigo['Premium'] = 'NA'
-        if indigo['Price']:
-            indigo['Stock'] = "In Stock"
-        else:
-            indigo['Stock'] = "Out Of Stock"
-        indigo['Manufacture'] = None
         try:
             line = soup.find("ul", {"class": "spec-list"}).get_text(strip=True)
             regex = re.compile('Purity([0-9]*)')
             indigo['Purity'] = regex.findall(line)[0]
         except:
             indigo['Purity'] = None
-        indigo['Product URL'] = url
+        indigo['Manufacture'] = None
+        indigo['Product URL'] = url[0]
         indigo['Supplier name'] = 'Indigo precious metals'
         indigo['Supplier Country'] = 'Singapore'
-        indigo['Weight'] = indigo['Metal Content']
+        # print("-----------------Indigo---------", indigo)
     except Exception as e: 
-        print('line 106 ------'+str(e))    
+        print('line 106 ------'+str(e))   
     try:
         connection,cursor = get_cursor()
         cursor.execute("SELECT * FROM gold_data WHERE Product_Name=%s" , [indigo['Product Name']] );
