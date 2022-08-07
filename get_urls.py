@@ -11,12 +11,15 @@ MAX_THREADS = 30
 
 
 def get_cursor():
-    connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
-    if connection.is_connected():
+    connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306',auth_plugin='mysql_native_password')
+    print(connection)
+    try:
+        print(connection.is_connected())
         print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
         return (connection,cursor)
-
+    except Exception as e:
+        print(e)
 
 def scraping(url):
     header = {
@@ -181,6 +184,7 @@ def main():
         executor.map(download_url, suplier_list)
 
 def download_url(final):
+    print('url in .......')
     suplier_name = final[0]
     urls = eval(final[1]+'()')
     connection,cursor = get_cursor()
