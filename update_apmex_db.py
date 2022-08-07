@@ -11,7 +11,7 @@ MAX_THREADS = 500
 
 
 def get_cursor():
-    connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+    connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
     if connection.is_connected():
         print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
