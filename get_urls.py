@@ -11,18 +11,13 @@ MAX_THREADS = 30
 
 
 def get_cursor():
-<<<<<<< HEAD
     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306',auth_plugin='mysql_native_password')
     print(connection)
     try:
-        print(connection.is_connected())
-=======
-    connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
-    if connection.is_connected():
->>>>>>> 439139079f7b0d4b93687f0780fbe8980432bb39
-        print("CONECTTEDDDDDDDDDDD!!!!!!!")
-        cursor = connection.cursor()
-        return (connection,cursor)
+        if connection.is_connected():
+            print("CONECTTEDDDDDDDDDDD!!!!!!!")
+            cursor = connection.cursor()
+            return (connection,cursor)
     except Exception as e:
         print(e)
 
