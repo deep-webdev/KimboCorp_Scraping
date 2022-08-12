@@ -7,6 +7,7 @@ from django.apps import apps
 from pycoingecko import CoinGeckoAPI
 import pandas as pd 
 from itertools import chain
+import mysql.connector
 
 # Create your views here.
 def index(request):
@@ -33,28 +34,36 @@ def get_suplier_data(name):
      return df_final.to_dict('records')
 
 def all_products(request):
-     suplier_name = Extracted.objects.filter().values_list('supplier_name').annotate(Min('price_usd')).order_by('price_usd')[0]
-     model_details ={
-          'Silver Bullion':'SilverBullion',
-          'APMEX': 'Apmex',
-          'Bullion Star':'BullionStar',
-          'Indigo precious metals':'IndigoPrecious',
-          'SDbullion':'SDBullion',
-          'Gold Silver Central':'GoldCentral',
-          'Kitco':'Kitco'
-     }
-     Model = apps.get_model('gold_scrap', model_details[suplier_name[0]])
-     data = get_suplier_data(Model)
+     # suplier_name = Extracted.objects.filter().values_list('supplier_name').annotate(Min('price_usd')).order_by('price_usd')[0]
+     # model_details ={
+     #      'Silver Bullion':'SilverBullion',
+     #      'APMEX': 'Apmex',
+     #      'Bullion Star':'BullionStar',
+     #      'Indigo precious metals':'IndigoPrecious',
+     #      'SDbullion':'SDBullion',
+     #      'Gold Silver Central':'GoldCentral',
+     #      'Kitco':'Kitco'
+     # }
+     # Model = apps.get_model('gold_scrap', model_details[suplier_name[0]])
+     # data = get_suplier_data(Model)
+     connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+     if connection.is_connected():
+          print("CONECTTEDDDDDDDDDDD!!!!!!!")
+          cursor = connection.cursor()
+          my_query = """SELECT * FROM url_and_supp;""";
+          data = cursor.execute(my_query)
+          connection.commit()
+          print(">>>>>>>>>>>>>>>>>>", data)
      price_table = get_price_table()
-     return render(request,'product.html',{'data':data, 'price_table':price_table,'name': model_details[suplier_name[0]]})
+     return render(request,'product.html',{'data':data, 'price_table':price_table})
 
 
 def get_spot():
-    data = apmex.scraping('https://www.monex.com/gold-prices/')
-    dfs = data[0]
-    soup = data[1]
-    spot = float(dfs[0]['Today'][0].replace('$','').replace(',',''))
-    return spot
+     data = apmex.scraping('https://www.monex.com/gold-prices/')
+     dfs = data[0]
+     soup = data[1]
+     spot = float(dfs[0]['Today'][0].replace('$','').replace(',',''))
+     return spot
 
 
 def get_price_table():
@@ -70,32 +79,42 @@ def get_crypto_price(request):
 
 
 def convert_to_float(frac_str):
-    try:
-        return float(frac_str)
-    except ValueError:
-        num, denom = frac_str.split('/')
-        try:
-            leading, num = num.split(' ')
-            whole = float(leading)
-        except ValueError:
-            whole = 0
-        frac = float(num) / float(denom)
-        return whole - frac if whole < 0 else whole + frac
+     try:
+          return float(frac_str)
+     except ValueError:
+          num, denom = frac_str.split('/')
+          try:
+               leading, num = num.split(' ')
+               whole = float(leading)
+          except ValueError:
+               whole = 0
+          frac = float(num) / float(denom)
+          return whole - frac if whole < 0 else whole + frac
 
 
 def all_supp_products(request):
-     silverbul = SilverBullion.objects.all()
-     indigorecious = IndigoPrecious.objects.all()
-     apmex = Apmex.objects.all()
-     bullion = BullionStar.objects.all()
-     sdbul = SDBullion.objects.all()
-     goldcentral = GoldCentral.objects.all()
-     kitco = Kitco.objects.all()
-     result_list = list(chain(silverbul,indigorecious, apmex, bullion, sdbul, goldcentral, kitco))
+     # silverbul = SilverBullion.objects.all()
+     # indigorecious = IndigoPrecious.objects.all()
+     # apmex = Apmex.objects.all()
+     # bullion = BullionStar.objects.all()
+     # sdbul = SDBullion.objects.all()
+     # goldcentral = GoldCentral.objects.all()
+     # kitco = Kitco.objects.all()
+     # result_list = list(chain(silverbul,indigorecious, apmex, bullion, sdbul, goldcentral, kitco))
+     # price_table = get_price_table()
+     # for i in result_list:
+     #      if 'oz' in i.weight:
+     #           print(i)
+     #           i.weight = str(price_table['spot'] * convert_to_float(i.weight.split(" ")[0])) + ' g'
+     connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+     if connection.is_connected():
+          print("CONECTTEDDDDDDDDDDD!!!!!!!")
+          cursor = connection.cursor()
+          my_query = """SELECT * FROM gold_data;""";
+          cursor.execute(my_query)
+          # connection.commit()
+          result = cursor.fetchall()
+          cursor.close()
+          print(">>>>>>>>>>>>>>>>>>", result)
      price_table = get_price_table()
-     for i in result_list:
-          if 'oz' in i.weight:
-               print(i)
-               i.weight = str(price_table['spot'] * convert_to_float(i.weight.split(" ")[0])) + ' g'
-
-     return render(request, 'allProducts.html', {'data': result_list, 'price_table':price_table})
+     return render(request, 'allProducts.html', {'data': result, 'price_table':price_table})

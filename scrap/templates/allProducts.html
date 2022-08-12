@@ -70,7 +70,7 @@
     }
   }
         </script>
-      <script>
+      {% comment %} <script>
         $(document).ready(function(){
           calculate()
         });
@@ -116,7 +116,7 @@
 
         }
 
-      </script>
+      </script> {% endcomment %}
       <style>
 
         .multiselect {
@@ -329,12 +329,12 @@ $(document).ready(function() {
     
         <div class="collapse navbar-collapse" id="navmenu">
           <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
+              {% comment %} <li class="nav-item">
                   <a href="{% url 'home' %}" class="nav-link">Extracted</a>
               </li>
               <li class="nav-item">
                   <a href="{% url 'products' %}" class="nav-link">Products</a>
-              </li>
+              </li> {% endcomment %}
               <li class="nav-item">
                   <a href="{% url 'all_prod' %}" class="nav-link">All Products</a>
               </li>
@@ -524,17 +524,16 @@ $(document).ready(function() {
             {% for i in data %}
             <tr>
               {% comment %} <td> {{ i.product_id }} </td> {% endcomment %}
-
-                <td><a href="{{ i.product_url }}" >{{ i.product_name|slice:":10"  }} </a> </td>
-                <td> {{ i.price_usd }} </td>
-                <td> {{ i.weight }} </td>
-                <td> {{ i.purity }} </td>
-                <td> {{ i.manufacture }} </td>
+                <td><a href="{{ i.12 }}" >{{ i.1  }} </a> </td>
+                <td> {{ i.2|floatformat:2 }} </td>
+                <td> {{ i.8 }} </td>
+                {% comment %} <td> {{ i }} </td> {% endcomment %}
+                <td> {{ i.11 }} </td>
                 <td>{{ i.premium }}</td>
-                <td> {{ i.supplier_name }} </td>
-                <td> {{ i.supplier_country }} </td>
+                <td> {{ i.13 }} </td>
+                <td> {{ i.14 }} </td>
 
-                <td>{{ i.stock }}</td>
+                <td>{{ i.5 }}</td>
                 <th>{{ i.Final_Price|floatformat:2 }}</th>
                 <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>
                 <th>{{ i.Ethereum_Price|floatformat:2 }}</th>
