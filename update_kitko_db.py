@@ -76,10 +76,10 @@ def kitco(url):
             kitco['Stock'] = 'In Stock'
             
         except:
-            kitco['Price'] = None
-            kitco['Crypto Price'] = None
+            kitco['Price'] = 0
+            kitco['Crypto Price'] = 0
 
-            kitco['CC/PayPal Price'] = None
+            kitco['CC/PayPal Price'] = 0
             kitco['Stock'] = 'Out of Stock'
 
         kitco['Product Id'] = None

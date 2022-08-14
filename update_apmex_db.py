@@ -73,9 +73,9 @@ def apmex(url):
         apmex_data['CC/PayPal Price'] = float(list(df[df.keys()[3]])[0].split('$')[1].replace(",", ""))
         apmex_data['Stock'] = 'In Stock'
     except:
-        apmex_data['Price'] = None
-        apmex_data['Crypto Price'] = None
-        apmex_data['CC/PayPal Price'] = None
+        apmex_data['Price'] = 0
+        apmex_data['Crypto Price'] = 0
+        apmex_data['CC/PayPal Price'] = 0
         apmex_data['Stock'] = 'Out Of Stock'
 
     try:

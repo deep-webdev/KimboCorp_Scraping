@@ -118,7 +118,6 @@ def sdb(url):
         sbul['Product URL'] = url[0]
         sbul['Supplier name'] = "SD Bullion"
         sbul['Supplier Country'] = "USA"
-        print(sbul)
     except Exception as e: 
         print('line 106 ------'+str(e))    
     try:
