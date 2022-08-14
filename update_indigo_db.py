@@ -66,11 +66,11 @@ def indigofetch(url):
         indigo['Product Name'] = soup.find("div", {"class": "product-name"}).get_text().split("\n")[1]
         try:
             indigo['Price'] = float(df[0]['Prices'][0].split('USD')[0].strip().replace(",",""))
-            indigo['Crypto Price'] = None
+            indigo['Crypto Price'] = 0
         except:
             indigo['Price'] = float(soup.find_all('span','price')[5].get_text().split()[0].replace(",",""))
-            indigo['Crypto Price'] = None
-        indigo['CC/PayPal Price'] = None
+            indigo['Crypto Price'] = 0
+        indigo['CC/PayPal Price'] = 0
         if indigo['Price']:
             indigo['Stock'] = "In Stock"
         else:
