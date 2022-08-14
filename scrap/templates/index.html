@@ -33,13 +33,10 @@
     <script>
       $(document).ready(function () {
           var table = $('#example').DataTable();
-       
           $('input.toggle-vis').on('change', function (e) {
               e.preventDefault();
-       
               // Get the column API object
               var column = table.column($(this).attr('data-column'));
-       
               // Toggle the visibility
               column.visible(!column.visible());
           });
@@ -69,18 +66,55 @@
     <script
       src="https://kit.fontawesome.com/f7b1e488bc.js"
       crossorigin="anonymous"
-    ></script>
-   {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    >
 
-    <script>
-      $(document).ready(function () {
-          var table = $('#example').DataTable({
-              paging: false,
-          });
-      });    
-    </script> {% endcomment %}
+    
+    
+    
+    
+    </script>
+<script>
+
+  function update_table(){
+          $.ajax({
+            url: "{% url 'update_extracted' %}",
+            type: 'POST',
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+              var table = $('#example').DataTable({retrieve: true,})  
+              console.log(data.data[0])
+              table.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+                console.log()
+                var t_data = this.data();
+                t_data[0] =  data.data[rowIdx][6];
+                t_data[1] = "<a href=' " + data.data[rowIdx][12] + "'>" + data.data[rowIdx][1] + "</a>";
+                t_data[2] = data.data[rowIdx][2];
+                t_data[3] = data.data[rowIdx][8];
+                t_data[4] = data.data[rowIdx][10];
+                t_data[5] = data.data[rowIdx][9];
+                t_data[6] = data.data[rowIdx][13];
+                t_data[7] = data.data[rowIdx][14];
+                t_data[8] = data.data[rowIdx][5];
+                this.data(t_data)
+            } ) 
+            }
+            ,
+                error:function () {
+
+                    alert("There is some problem occurred while processing your request !!");
+                }    
+              });
+
+        }
+
+        setInterval( function () {
+        update_table()
+        }, 3000 );
+
+</script>
+
 
       
     <style>
@@ -285,29 +319,29 @@
           <!-- Table rows go here -->
           {% for i in data %}
           <tr>
-            <td> {{ i.product_id }} </td>
+            <td> {{ i.6 }} </td>
 
-               <td><a href="{{ i.product_url }}" >{{ i.product_name }} </a> </td>
-               {% if i.price_usd == "NA" %}
+              <td><a href="{{ i.12 }}" >{{ i.1 }} </a> </td>
+              {% if i.2 == "NA" %}
 
-               <td> {{ i.price_usd }} </td>
+              <td> {{ i.2 }} </td>
 
-               {% else %}
-               <td> {{ i.price_usd|floatformat:2 }} </td>
+              {% else %}
+              <td> {{ i.2|floatformat:2 }} </td>
 
-               {% endif %}
-               
-               {% comment %} <td> {{ i.crypto_price }} </td>
-               <td> {{ i.paypal_price }} </td> {% endcomment %}
-               <td> {{ i.weight }} </td>
-               {% comment %} <td> {{ i.metal_content }} </td> {% endcomment %}
-               <td> {{ i.purity }} </td>
-               {% comment %} <td> {{ i.manufacture }} </td> {% endcomment %}
-               <td> {{ i.premium }} </td>
-               {% comment %} <td><a href="{{ i.product_url }}" >{{ i.product_url|slice:":10" }} </a></td> {% endcomment %}
-               <td> {{ i.supplier_name }} </td>
-               <td> {{ i.supplier_country }} </td>
-               <td> {{ i.stock }}</td>
+              {% endif %}
+              
+              {% comment %} <td> {{ i.crypto_price }} </td>
+              <td> {{ i.paypal_price }} </td> {% endcomment %}
+              <td> {{ i.8 }} </td>
+              {% comment %} <td> {{ i.metal_content }} </td> {% endcomment %}
+              <td> {{ i.10 }} </td>
+              {% comment %} <td> {{ i.manufacture }} </td> {% endcomment %}
+              <td> {{ i.9 }} </td>
+              {% comment %} <td><a href="{{ i.product_url }}" >{{ i.product_url|slice:":10" }} </a></td> {% endcomment %}
+              <td> {{ i.13 }} </td>
+              <td> {{ i.14 }} </td>
+              <td> {{ i.5 }}</td>
 
           </tr>
         {% endfor %}

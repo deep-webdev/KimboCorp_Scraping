@@ -48,10 +48,8 @@
 
         $('input.toggle-vis').on('change', function (e) {
           e.preventDefault();
-   
           // Get the column API object
           var column = table.column($(this).attr('data-column'));
-   
           // Toggle the visibility
           column.visible(!column.visible());
       });
@@ -102,7 +100,7 @@
                 t_data[11] = eth_price.toFixed(2);
                 t_data[12] = th_price.toFixed(2);
                 this.data(t_data)
-             } )
+              })
             }
             ,
                 complete:function () {
@@ -115,6 +113,11 @@
               });
 
         }
+
+          $(document).ready(function(){
+          calculate()
+      });
+
 
       </script>
       <style>
@@ -139,52 +142,52 @@
               font-size: 10px;
               white-space: nowrap;
           }
-   {% endcomment %}
+          {% endcomment %}
 
-   .grid,
-   .subgrid {
-     display: grid;
-     grid-template-columns: minmax(0, 1fr);
-   }
+    .grid,
+    .subgrid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+    }
 
-   .grid {
-     grid-template-areas:
-     'header'
-     'main'
-     'aside'
-     'footer';
-     width: 100%;
-   }
+    .grid {
+      grid-template-areas:
+      'header'
+      'main'
+      'aside'
+      'footer';
+      width: 100%;
+    }
 
-   .subgrid {
-     width: calc(100% + 2rem);
-     margin: 0 -1rem;
-   }
+    .subgrid {
+      width: calc(100% + 2rem);
+      margin: 0 -1rem;
+    }
 
-   .grid-item,
-   .subgrid-item {
-     padding: 1rem;
-   }
+    .grid-item,
+    .subgrid-item {
+      padding: 1rem;
+    }
 
-   @media all and (min-width: 576px) {
-     .subgrid {
-       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-       margin-bottom: 1rem;
-     }
-     .subgrid-item {
-       padding-bottom: 0.25rem;
-     }
-   }
+    @media all and (min-width: 576px) {
+      .subgrid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        margin-bottom: 1rem;
+      }
+      .subgrid-item {
+        padding-bottom: 0.25rem;
+      }
+    }
 
-   @media all and (min-width: 992px) { 
-     .grid {
-       grid-template-areas:
-         'header header header'
-         'main main aside'
-         'footer footer footer';
-       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-     }
-   }
+    @media all and (min-width: 992px) { 
+      .grid {
+        grid-template-areas:
+          'header header header'
+          'main main aside'
+          'footer footer footer';
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
 
         .selectBox {
           position: relative;
@@ -278,7 +281,7 @@
             border: 1px solid #ddd;
             font-size: 11px;
         }
-   {% endcomment %}
+  {% endcomment %}
       </style>
 
       <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
@@ -286,27 +289,27 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script>
-$(document).ready(function() {
+      $(document).ready(function() {
           var table=$('#example').DataTable({
-           "paging":true,fixedHeader:{header: true,footer: true},responsive: true,autoWidth: true,  aaSorting: [[2, 'asc']], cache: true,
+          "paging":true,fixedHeader:{header: true,footer: true},responsive: true,autoWidth: true,  aaSorting: [[2, 'asc']], cache: true,
             initComplete: function () {
             }
-       });
-       $(".filterhead").each(function (i) {
-                 if (i != 0  && i != 1  && i != 2 && i != 3  && i != 4  && i != 5 && i != 9  && i != 10  && i != 11  && i != 12 ) {
-                     var select = $('<select><option value=""></option></select>')
-                         .appendTo($(this).empty())
-                         .on('change', function () {
-                             var term = $(this).val();
-                             table.column(i).search(term, false, false).draw();
-                         });
-                     table.column(i).data().unique().sort().each(function (d, j) {
-                         select.append('<option value="' + d + '">' + d + '</option>')
-                     });
-                 } else {
-                    $(this).empty();
-                 }
-             });
+      });
+      $(".filterhead").each(function (i) {
+            if (i != 0  && i != 1  && i != 2 && i != 3  && i != 4  && i != 5 && i != 9  && i != 10  && i != 11  && i != 12 ) {
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo($(this).empty())
+                    .on('change', function () {
+                        var term = $(this).val();
+                        table.column(i).search(term, false, false).draw();
+                    });
+                table.column(i).data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            } else {
+              $(this).empty();
+            }
+        });
 } );
 </script>
 
@@ -523,22 +526,22 @@ $(document).ready(function() {
             <!-- Table rows go here -->
             {% for i in data %}
             <tr>
-              {% comment %} <td> {{ i.product_id }} </td> {% endcomment %}
+              <td><a href="{{ i.12 }}" >{{ i.1  }} </a> </td>
+                <td> {{ i.2|floatformat:2 }} </td>
+                <td> {{ i.8 }} </td>
+                {% comment %} <td> {{ i }} </td> {% endcomment %}
+                <td> {{ i.10 }} </td>
+                <td>{{ i.11}}</td>
+                <td>{{ i.9 }}</td>
+                <td> {{ i.13 }} </td>
+                <td> {{ i.14 }} </td>
+                <td>{{ i.5 }}</td>
 
-                <td><a href="{{ i.product_url }}" >{{ i.product_name|slice:":10"  }} </a> </td>
-                <td> {{ i.price_usd }} </td>
-                <td> {{ i.weight }} </td>
-                <td> {{ i.purity }} </td>
-                <td> {{ i.manufacture }} </td>
-                <td>{{ i.premium }}</td>
-                <td> {{ i.supplier_name }} </td>
-                <td> {{ i.supplier_country }} </td>
-
-                <td>{{ i.stock }}</td>
                 <th>{{ i.Final_Price|floatformat:2 }}</th>
                 <th>{{ i.Bitcoin_Price|floatformat:2 }}</th>
                 <th>{{ i.Ethereum_Price|floatformat:2 }}</th>
                 <th>{{ i.Tether_Price|floatformat:2 }}</th>
+
     
 
             </tr>
