@@ -1,3 +1,4 @@
+from curses import def_prog_mode
 import mysql.connector
 from forex_python.converter import CurrencyRates
 import pandas as pd
@@ -383,6 +384,9 @@ def main_update():
     cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12] + [cols[12]]
     df_final = df_final[cols]
     df_final.fillna('NA',inplace=True)
+    df_final['Price'] = df_final['Price'].replace('NA', 0)
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA', 0)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA', 0)
     df_final.loc[df_final['Price'] == "NA", 'Stock'] = 'Out of Stock'
     df_final.loc[df_final['Price'] != "NA", 'Stock'] = 'In Stock'
     df_records = df_final.to_dict('records')
