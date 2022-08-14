@@ -15,7 +15,6 @@ def get_cursor():
     print(connection)
     try:
         if connection.is_connected():
-            print("CONECTTEDDDDDDDDDDD!!!!!!!")
             cursor = connection.cursor()
             return (connection,cursor)
     except Exception as e:

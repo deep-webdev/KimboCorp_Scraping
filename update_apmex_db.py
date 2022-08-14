@@ -13,7 +13,6 @@ MAX_THREADS = 500
 def get_cursor():
     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
     if connection.is_connected():
-        print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
         return (connection,cursor)
 
@@ -57,7 +56,6 @@ def convert_to_float(frac_str):
 
 
 def apmex(url):
-    print(url[0])
     data = scraping(url[0])
     df = data[0][-1]
     soup = data[1]
@@ -123,7 +121,6 @@ def apmex(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print("Sucess !!")
         except Exception as e:
             print(e)
     
@@ -135,7 +132,6 @@ def apmex(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print("Sucess !!")
         except Exception as e:
             print(e)
 
@@ -145,7 +141,6 @@ def main():
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Apmex'");
     data = cursor.fetchall()
-    print(">>>>>>>>>>>>>>>>>", len(data), data[0][0])
     
     # suplier_list = [('Silverbullion','silverbullion'),('Goldcentral','urlsGoldcentral'),
     # ('Kitco','urlsKitco'),('Indigo','urlsIndigo'),('Apmex','urlsApmex'),('Sdbullion','urlSdbullion')]

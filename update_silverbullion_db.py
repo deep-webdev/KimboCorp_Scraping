@@ -15,7 +15,6 @@ MAX_THREADS = 300
 def get_cursor():
     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
     if connection.is_connected():
-        print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
         return (connection,cursor)
 
@@ -126,8 +125,6 @@ def silverbul(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print(record)
-            print("Update Sucess !!")
         except Exception as e:
             print('line 124 ------'+str(e))    
     
@@ -140,7 +137,6 @@ def silverbul(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print("Sucess !!")
         except Exception as e:
             print('line 137 ------'+str(e))
 
@@ -151,10 +147,7 @@ def main():
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Silverbullion'");
     data = cursor.fetchall()
-    print(">>>>>>>>>>>>>>>>>", len(data), data[0][0])
     
-    # suplier_list = [('Silverbullion','silverbullion'),('Goldcentral','urlsGoldcentral'),
-    # ('Kitco','urlsKitco'),('Indigo','urlsIndigo'),('Apmex','urlsApmex'),('Sdbullion','urlSdbullion')]
     threads = min(MAX_THREADS, len(data))
 
     

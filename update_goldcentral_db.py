@@ -124,8 +124,6 @@ def goldcentral(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print(record)
-            print("Update Sucess !!")
         except Exception as e:
             print('line 124 ------'+str(e))    
     
@@ -138,7 +136,6 @@ def goldcentral(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print("Sucess !!")
         except Exception as e:
             print('line 137 ------'+str(e))
 
@@ -149,7 +146,6 @@ def main():
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Goldcentral'");
     data = cursor.fetchall()
-    print(">>>>>>>>>>>>>>>>>", len(data), data[0][0])
     
     # suplier_list = [('Silverbullion','silverbullion'),('Goldcentral','urlsGoldcentral'),
     # ('Kitco','urlsKitco'),('Indigo','urlsIndigo'),('Apmex','urlsApmex'),('Sdbullion','urlSdbullion')]

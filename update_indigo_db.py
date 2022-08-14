@@ -15,7 +15,6 @@ MAX_THREADS = 300
 def get_cursor():
     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
     if connection.is_connected():
-        print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
         return (connection,cursor)
 
@@ -84,7 +83,6 @@ def indigofetch(url):
         elif 'grams' in indigo['Metal Content'].split():
             content = convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274
         indigo['Weight'] = indigo['Metal Content']
-        # indigo['Weight'] = str(float(convert_to_float(content)) * (1/0.035274)) + 'grams'
         unit_price = float(spot) * float(convert_to_float(content))
         if indigo['Price']: 
             difference = abs(int(indigo['Price']) - unit_price)
@@ -101,7 +99,6 @@ def indigofetch(url):
         indigo['Product URL'] = url[0]
         indigo['Supplier name'] = 'Indigo precious metals'
         indigo['Supplier Country'] = 'Singapore'
-        # print("-----------------Indigo---------", indigo)
     except Exception as e: 
         print('line 106 ------'+str(e))   
     try:
@@ -121,8 +118,6 @@ def indigofetch(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print(record)
-            print("Update Sucess !!")
         except Exception as e:
             print('line 124 ------'+str(e))    
     
@@ -135,7 +130,6 @@ def indigofetch(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print("Sucess !!")
         except Exception as e:
             print('line 137 ------'+str(e))
 
@@ -146,7 +140,6 @@ def main():
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Indigo'");
     data = cursor.fetchall()
-    print(">>>>>>>>>>>>>>>>>", len(data), data[0][0])
     
     # suplier_list = [('Silverbullion','silverbullion'),('Goldcentral','urlsGoldcentral'),
     # ('Kitco','urlsKitco'),('Indigo','urlsIndigo'),('Apmex','urlsApmex'),('Sdbullion','urlSdbullion')]

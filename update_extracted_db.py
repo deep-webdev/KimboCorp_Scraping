@@ -9,9 +9,8 @@ import unicodedata
 import math
 
 def get_cursor():
-    connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+    connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
     if connection.is_connected():
-        print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
         return (connection,cursor)
 
@@ -62,7 +61,7 @@ def apmex():
     apmex_data['Purity'] = soup.find_all("ul", {"class": "product-table"})[1].get_text().split("\n")[1].split(":")[1].strip()
     apmex_data['Manufacture'] = None
     apmex_data['Product URL'] = 'https://www.apmex.com/product/11934/1-kilo-gold-bar-various-mints'
-    apmex_data['Supplier name'] = 'Apmex'
+    apmex_data['Supplier name'] = 'APMEX'
     apmex_data['Supplier Country'] = 'Singapore'
     apmex_data['Weight'] = '1000 grams'
 
@@ -191,7 +190,7 @@ def indigopreciousmetals():
     indigo['Manufacture'] = None
     indigo['Purity'] = soup.find("div", {"class": "specifications"}).get_text().split("\n")[18].split("\t")[2].strip()
     indigo['Product URL'] = 'https://www.indigopreciousmetals.com/bullion-products/gold/gold-bars/1-kilo-gold-lbma-good-delivery-bars-indigo-precious-metals.html'
-    indigo['Supplier name'] = 'Indigo'
+    indigo['Supplier name'] = 'Indigo precious metals'
     indigo['Supplier Country'] = 'Singapore'
     indigo['Weight'] = '1000 grams'
 
@@ -220,7 +219,7 @@ def sdbullion():
     sdbullion['Purity'] = list(data[0][-1][1])[5]
     sdbullion['Product URL'] = 'https://sdbullion.com/generic-gold-kilo-bar'
     sdbullion['Manufacture'] = None
-    sdbullion['Supplier name'] = 'Sdbullion'
+    sdbullion['Supplier name'] = 'SD Bullion'
     sdbullion['Supplier Country'] = 'USA'
     sdbullion['Weight'] = '1000 grams'
 
@@ -281,7 +280,7 @@ def goldcentral():
     goldcentral['Manufacture'] = None
     purity = soup.find("div", {"class":"kw-details-desc"}).get_text().split('purity of')[1].split('%')[0]
     goldcentral['Purity'] = float(purity.strip()) * 100
-    goldcentral['Supplier name'] = "Goldcentral"
+    goldcentral['Supplier name'] = "Gold Silver Central"
     goldcentral['Metal Content'] = None
     goldcentral['Product Id'] = None
     goldcentral['Weight'] = '1000 grams'
@@ -333,14 +332,14 @@ def silverbullion():
         silverbullion['Price'] = None
         silverbullion['Premium'] = None
     silverbullion['Crypto Price'] = None
-    silverbullion['CC/PayPal Price'] = None
+    silverbullion['CC/PayPal Price']     = None
     silverbullion['Product Id'] = None
     silverbullion['Metal Content'] = None
     silverbullion['Purity'] = soup.find("p", {"class": "sgi-size-material hidden-xs"}).get_text().strip().split('.')[1].split('Purity')[0]
     silverbullion['Manufacture'] = soup.find("p", {"class": "sgi-size-material hidden-xs"}).get_text().strip().split('.')[1].split('Refiner:')[1]
     silverbullion['Product URL'] = "https://www.silverbullion.com.sg/Product/Detail/Gold_1_kg_Metalor_bar"
     silverbullion['Supplier Country'] = "Singapore"
-    silverbullion['Supplier name'] = "Silverbullion"
+    silverbullion['Supplier name'] = "Silver Bullion"
     silverbullion['Weight'] = "1000 grams"
 
     return silverbullion
@@ -379,19 +378,18 @@ def acheter():
 
 def main_update():
     print("in Extracted")
-    df_final = pd.DataFrame([apmex(),jmbullion(),achat(),bullionstar(),indigopreciousmetals(),sdbullion(), goldcentral(),kitco(),silverbullion(), acheter()])
+    df_final = pd.DataFrame([apmex(),jmbullion(),achat(),bullionstar(),indigopreciousmetals(),sdbullion(),kitco(),silverbullion(), acheter()])
     cols = df_final.columns.tolist()
     cols = cols[0:2] + [cols[9]] + cols[2:9] + cols[10:12] + [cols[12]]
     df_final = df_final[cols]
-    print(">>>>>>>>>>>>>>>>>>>>>")
     df_final.fillna('NA',inplace=True)
     df_final.loc[df_final['Price'] == "NA", 'Stock'] = 'Out of Stock'
     df_final.loc[df_final['Price'] != "NA", 'Stock'] = 'In Stock'
     df_records = df_final.to_dict('records')
-    # print(df_records)
     connection,cursor = get_cursor()
     for i in df_records:
-        cursor.execute("SELECT * FROM extracted WHERE Supplier_name=" + i.get('Supplier name') );
+        print(i)
+        cursor.execute("""SELECT * FROM extracted WHERE Supplier_name=%s""" , [i['Supplier name']]);
         data = cursor.fetchall()
         if data:
             try:
@@ -399,43 +397,19 @@ def main_update():
                 record = [i.get('Price'), i.get('Crypto Price'), i.get('CC/PayPal Price'), i.get('Stock'),i.get('Premium'),i.get('Supplier name')]
                 cursor.execute(my_query, record)
                 connection.commit()
-                cursor.close()
-                connection.close()
-                print("Sucess !!")
             except Exception as e:
                 print(e)
         else:    
             try:
-                my_query = """INSERT INTO gold_data (Product_Name,Price,Crypto_Price,CC_PayPal_Price,Stock,Product_Id,Metal_Content,Weight,Premium,Purity,Manufacture,Product_URL,Supplier_name,Supplier_Country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""";
+                my_query = """INSERT INTO extracted (Product_Name,Price,Crypto_Price,CC_PayPal_Price,Stock,Product_Id,Metal_Content,Weight,Premium,Purity,Manufacture,Product_URL,Supplier_name,Supplier_Country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""";
                 record = [i.get('Product Name'), i.get('Price'), i.get('Crypto Price'), i.get('CC/PayPal Price'),
                         i.get('Stock'), i.get('Product Id'), i.get('Metal Content'), i.get('Weight'), i.get('Premium'),
                         i.get('Purity'), i.get('Manufacture'), i.get('Product URL'), i.get('Supplier name'), i.get('Supplier Country')]
                 cursor.execute(my_query, record)
-                cursor.close()
-                connection.close()
-                print("Sucess !!")
+                connection.commit()
             except Exception as e:
                 print(e)
-            
-    # model_instances = [Extracted(
-    #     product_name=record['Product Name'],
-    #     price_usd=record['Price'],
-    #     crypto_price=record['Crypto Price'],
-    #     paypal_price=record['CC/PayPal Price'], 
-    #     weight = record['Weight'],
-    #     premium = record['Premium'],
-    #     product_id = record['Product Id'],
-    #     metal_content = record['Metal Content'],
-    #     purity = record['Purity'],
-    #     manufacture = record['Manufacture'],
-    #     product_url = record['Product URL'],
-    #     supplier_name= record['Supplier name'],
-    #     supplier_country = record['Supplier Country'],
-    #     stock = record['Stock']
-    # ) for record in df_records]
-
-    # Extracted.objects.all().delete()
-
-    # Extracted.objects.bulk_create(model_instances)
+    cursor.close()
+    connection.close()
 
 main_update()

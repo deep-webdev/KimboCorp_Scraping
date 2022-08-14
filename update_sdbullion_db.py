@@ -13,7 +13,6 @@ MAX_THREADS = 300
 def get_cursor():
     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
     if connection.is_connected():
-        print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
         return (connection,cursor)
 
@@ -74,14 +73,14 @@ def sdb(url):
                 sbul['CC/PayPal Price'] = float(df[0]['Credit / PayPal'][0].split("$")[1].replace(",",""))
                 sbul['Stock'] = "In stock"
             else:
-                sbul['Price'] = None
-                sbul['Crypto Price'] = None
-                sbul['CC/PayPal Price'] = None
+                sbul['Price'] = 0
+                sbul['Crypto Price'] = 0
+                sbul['CC/PayPal Price'] = 0
                 sbul['Stock'] = "Out of Stock"
         except:
-            sbul['Price'] = None
-            sbul['Crypto Price'] = None
-            sbul['CC/PayPal Price'] = None
+            sbul['Price'] = 0
+            sbul['Crypto Price'] = 0
+            sbul['CC/PayPal Price'] = 0
             sbul['Stock'] = "Out of Stock"
         sbul['Product Id'] = None
         sbul['Metal content'] = df[-1][1][3]
@@ -117,8 +116,9 @@ def sdb(url):
             sbul['Purity'] = None
         sbul['Manufacture'] = None
         sbul['Product URL'] = url[0]
-        sbul['Supplier Country'] = "USA"
         sbul['Supplier name'] = "SD Bullion"
+        sbul['Supplier Country'] = "USA"
+        print(sbul)
     except Exception as e: 
         print('line 106 ------'+str(e))    
     try:
@@ -138,8 +138,6 @@ def sdb(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print(record)
-            print("Update Sucess !!")
         except Exception as e:
             print('line 124 ------'+str(e))    
     
@@ -152,7 +150,6 @@ def sdb(url):
             connection.commit()
             cursor.close()
             connection.close()
-            print("Sucess !!")
         except Exception as e:
             print('line 137 ------'+str(e))    
 
@@ -162,7 +159,6 @@ def main():
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Sdbullion'");
     data = cursor.fetchall()
-    print(">>>>>>>>>>>>>>>>>", len(data), data[0][0])
     
     # suplier_list = [('Silverbullion','silverbullion'),('Goldcentral','urlsGoldcentral'),
     # ('Kitco','urlsKitco'),('Indigo','urlsIndigo'),('Apmex','urlsApmex'),('Sdbullion','urlSdbullion')]
