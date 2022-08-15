@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from lxml.html import fromstring
 from urllib.request import Request, urlopen
 import concurrent.futures
-
+from datetime import datetime
 MAX_THREADS = 500
 
 
@@ -136,7 +136,7 @@ def apmex(url):
             print(e)
 
 def main():
-    print("IN main")
+    # print("IN main", datetime.now())
     connection,cursor = get_cursor()
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Apmex'");
@@ -148,6 +148,6 @@ def main():
 
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
-        executor.map(apmex, data)
-
+        executor.map(apmex, data[:200])
+    # print("END MAIN", datetime.now())
 main()

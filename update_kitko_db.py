@@ -91,7 +91,7 @@ def kitco(url):
         elif 'g' in kitco['Metal Content'].split():
             content = convert_to_float(kitco['Metal Content'].split()[0]) * 0.035274
 
-        kitco['Weight'] = str(round(float(convert_to_float(content)) * (1/0.035274),2)) + ' grams'
+        kitco['Weight'] = str(round(float(convert_to_float(content)) * (1/0.035274))) + ' grams'
         unit_price = float(spot) * float(convert_to_float(content))
         if kitco['Price']: 
             difference = abs(int(kitco['Price']) - unit_price)
@@ -105,7 +105,6 @@ def kitco(url):
 
         kitco['Product URL'] = "https://online.kitco.com" + url[0]
         kitco['Supplier name'] = "Kitco"
-
         kitco['Supplier Country'] = "USA"
     except Exception as e: 
         print('line 106 ------'+str(e))    
@@ -118,8 +117,8 @@ def kitco(url):
 
     if(data):
         try:
-            my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s WHERE Product_Name=%s ;""";
-            record = [kitco['Price'], kitco['Crypto Price'], kitco['CC/PayPal Price'], kitco['Stock'],kitco['Premium'],kitco['Product Name']]
+            my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s,Weight=%s WHERE Product_Name=%s ;""";
+            record = [kitco['Price'], kitco['Crypto Price'], kitco['CC/PayPal Price'], kitco['Stock'],kitco['Premium'],kitco['Weight'],kitco['Product Name']]
             connection,cursor = get_cursor()
 
             cursor.execute(my_query, record)

@@ -76,13 +76,15 @@ def indigofetch(url):
         else:
             indigo['Stock'] = "Out Of Stock"
         indigo['Product Id']= None
-        indigo['Metal Content']= soup.find("div", {"class":"specifications"}).get_text(strip=True).split('Country')[0].split('Weight')[1]
+        indigo['Metal Content'] = soup.find("div", {"class":"specifications"}).get_text(strip=True).split('Country')[0].split('Weight')[1]
 
         if 'KG' in indigo['Metal Content'].split():
-            content = convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274 *1000
+            content = round(convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274 * 1000)
+            indigo['Weight'] = str(int(indigo['Metal Content'].split()[0]) * 1000) + " grams"
         elif 'grams' in indigo['Metal Content'].split():
-            content = convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274
-        indigo['Weight'] = indigo['Metal Content']
+            content = round(convert_to_float(indigo['Metal Content'].split()[0]) * 0.035274)
+            indigo['Weight'] = indigo['Metal Content']
+        print(indigo['Weight'])
         unit_price = float(spot) * float(convert_to_float(content))
         if indigo['Price']: 
             difference = abs(int(indigo['Price']) - unit_price)

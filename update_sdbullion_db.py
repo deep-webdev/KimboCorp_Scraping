@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from lxml.html import fromstring
 from urllib.request import Request, urlopen
 import concurrent.futures
+from datetime import datetime
 
 MAX_THREADS = 300
 
@@ -126,13 +127,11 @@ def sdb(url):
         data = cursor.fetchall()
     except Exception as e:
         print('line 111 ------'+str(e))    
-
+    connection,cursor = get_cursor()
     if(data):
         try:
             my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s WHERE Product_Name=%s ;""";
             record = [sbul['Price'], sbul['Crypto Price'], sbul['CC/PayPal Price'], sbul['Stock'],sbul['Premium'],sbul['Product Name']]
-            connection,cursor = get_cursor()
-
             cursor.execute(my_query, record)
             connection.commit()
             cursor.close()
@@ -144,7 +143,6 @@ def sdb(url):
         try:
             my_query = """INSERT INTO gold_data (Product_Name,Price,Crypto_Price,CC_PayPal_Price,Stock,Product_Id,Metal_Content,Weight,Premium,Purity,Manufacture,Product_URL,Supplier_name,Supplier_Country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""";
             record = list(sbul.values())
-            connection,cursor = get_cursor()
             cursor.execute(my_query, record)
             connection.commit()
             cursor.close()
@@ -153,7 +151,7 @@ def sdb(url):
             print('line 137 ------'+str(e))    
 
 def main():
-    print("IN main")
+    # print("IN main", datetime.now())
     connection,cursor = get_cursor()
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Sdbullion'");
@@ -165,6 +163,6 @@ def main():
 
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
-        executor.map(sdb, data)
-
+        executor.map(sdb, data[:200])
+    # print("END main", datetime.now())
 main()

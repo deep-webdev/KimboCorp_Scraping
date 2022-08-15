@@ -7,7 +7,8 @@ from bs4 import BeautifulSoup
 from lxml.html import fromstring
 from urllib.request import Request, urlopen
 import concurrent.futures
-import re
+from datetime import datetime
+
 
 MAX_THREADS = 300
 
@@ -15,7 +16,6 @@ MAX_THREADS = 300
 def get_cursor():
     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
     if connection.is_connected():
-        print("CONECTTEDDDDDDDDDDD!!!!!!!")
         cursor = connection.cursor()
         return (connection,cursor)
 
@@ -113,13 +113,11 @@ def goldcentral(url):
         data = cursor.fetchall()
     except Exception as e:
         print('line 111 ------'+str(e))
-
+    connection,cursor = get_cursor()
     if(data):
         try:
             my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s WHERE Product_Name=%s ;""";
             record = [goldcentral['Price'], goldcentral['Crypto Price'], goldcentral['CC/PayPal Price'], goldcentral['Stock'],goldcentral['Premium'],goldcentral['Product Name']]
-            connection,cursor = get_cursor()
-
             cursor.execute(my_query, record)
             connection.commit()
             cursor.close()
@@ -131,7 +129,6 @@ def goldcentral(url):
         try:
             my_query = """INSERT INTO gold_data (Product_Name,Price,Crypto_Price,CC_PayPal_Price,Stock,Product_Id,Metal_Content,Weight,Premium,Purity,Manufacture,Product_URL,Supplier_name,Supplier_Country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""";
             record = list(goldcentral.values())
-            connection,cursor = get_cursor()
             cursor.execute(my_query, record)
             connection.commit()
             cursor.close()
@@ -141,12 +138,11 @@ def goldcentral(url):
 
 
 def main():
-    print("IN main")
+    # print("IN main", datetime.now())
     connection,cursor = get_cursor()
 
     cursor.execute("SELECT url FROM url_and_supp WHERE supplier='Goldcentral'");
     data = cursor.fetchall()
-    
     # suplier_list = [('Silverbullion','silverbullion'),('Goldcentral','urlsGoldcentral'),
     # ('Kitco','urlsKitco'),('Indigo','urlsIndigo'),('Apmex','urlsApmex'),('Sdbullion','urlSdbullion')]
     threads = min(MAX_THREADS, len(data))
@@ -154,5 +150,7 @@ def main():
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
         executor.map(goldcentral, data)
-
+    # print("END main", datetime.now())
+    cursor.close()
+    connection.close()
 main()
