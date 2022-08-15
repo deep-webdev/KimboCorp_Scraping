@@ -62,7 +62,7 @@ def update_data():
         except Exception as e:
             print(e)
         if 'troy' in i['Weight'].split():
-            i['Weight'] = str(int((convert_to_float(i['Weight'].split()[0]) * 31.103))) + " grams"
+            i['Weight'] = str(round((convert_to_float(i['Weight'].split()[0]) * 31.103), 2)) + " grams"
         if(data):
             try:
                 my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s,Weight=%s WHERE Product_Id=%s ;""";
