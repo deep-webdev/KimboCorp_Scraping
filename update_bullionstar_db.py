@@ -42,6 +42,9 @@ def update_data():
     df_final['SGD Price'] = 'NA'
     df_final['Crypto Price'] = 'NA'
     df_final['CC/PayPal Price'] = 'NA'
+    df_final['Price'] = df_final['Price'].replace('NA', 0)
+    df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA', 0)
+    df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA', 0)
     df_final['Supplier name'] = "Bullion Star"
     if 'gram' in df_final['Weight'].str.split()[1]:
         df_final['Weight'] = df_final['Weight'].replace({'gram': 'grams'}, regex=True)
