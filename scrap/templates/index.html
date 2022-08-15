@@ -84,7 +84,6 @@
             contentType: false,
             success: function(data) {
               var table = $('#example').DataTable({retrieve: true,})  
-              console.log(data.data[0])
               table.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
                 console.log()
                 var t_data = this.data();
@@ -102,8 +101,7 @@
             }
             ,
                 error:function () {
-
-                    alert("There is some problem occurred while processing your request !!");
+                    console.log("There is some problem occurred while processing your request !!");
                 }    
               });
 
@@ -111,7 +109,7 @@
 
         setInterval( function () {
         update_table()
-        }, 3000 );
+        }, 7000);
 
 </script>
 
