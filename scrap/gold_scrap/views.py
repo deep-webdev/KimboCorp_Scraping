@@ -16,7 +16,7 @@ def index(request):
 
 
 def extracted(request):
-     connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
      if connection.is_connected():
           cursor = connection.cursor()
           my_query = """SELECT * FROM extracted;""";
@@ -28,7 +28,7 @@ def extracted(request):
 
 
 def update_extracted(request):
-     connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
      if connection.is_connected():
           cursor = connection.cursor()
           my_query = """SELECT * FROM extracted;""";
@@ -41,7 +41,7 @@ def update_extracted(request):
 
 def all_products(request):
      
-     connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
      if connection.is_connected():
           cursor = connection.cursor()
           my_query = """SELECT Supplier_name FROM extracted WHERE Price =  ( SELECT MIN(Price) FROM extracted where Price != 0 ) """;
@@ -89,7 +89,7 @@ def convert_to_float(frac_str):
 
 
 def all_supp_products(request):
-     connection = mysql.connector.connect(user='root', database='gold_scrap', host='127.0.0.1', password="", port='3306')
+     connection = mysql.connector.connect(user='gold_scrap', database='gold_scrap', host='localhost', password="Gold_scrap@123", port='3306', auth_plugin='mysql_native_password')
      if connection.is_connected():
           cursor = connection.cursor()
           my_query = """SELECT * FROM gold_data;""";
