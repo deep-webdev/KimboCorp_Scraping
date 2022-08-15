@@ -51,7 +51,7 @@ def all_products(request):
           cursor.execute(my_query, [result[0]])
           data = cursor.fetchall()
      price_table = get_price_table()
-     return render(request,'product.html',{'data':data, 'price_table':price_table})
+     return render(request,'product.html',{'data':data,'name': result ,'price_table':price_table})
 
 
 def get_spot():
