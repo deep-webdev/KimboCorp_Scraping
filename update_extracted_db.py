@@ -387,8 +387,8 @@ def main_update():
     df_final['Price'] = df_final['Price'].replace('NA', 0)
     df_final['Crypto Price'] = df_final['Crypto Price'].replace('NA', 0)
     df_final['CC/PayPal Price'] = df_final['CC/PayPal Price'].replace('NA', 0)
-    df_final.loc[df_final['Price'] == "NA", 'Stock'] = 'Out of Stock'
-    df_final.loc[df_final['Price'] != "NA", 'Stock'] = 'In Stock'
+    df_final.loc[df_final['Price'] == 0, 'Stock'] = 'Out of Stock'
+    df_final.loc[df_final['Price'] != 0, 'Stock'] = 'In Stock'
     df_records = df_final.to_dict('records')
     connection,cursor = get_cursor()
     for i in df_records:
