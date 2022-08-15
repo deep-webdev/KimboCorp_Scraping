@@ -159,7 +159,7 @@ def main():
     
     # suplier_list = [('Silverbullion','silverbullion'),('Goldcentral','urlsGoldcentral'),
     # ('Kitco','urlsKitco'),('Indigo','urlsIndigo'),('Apmex','urlsApmex'),('Sdbullion','urlSdbullion')]
-    threads = min(MAX_THREADS, len(data))
+    threads = min(MAX_THREADS, 200)
 
     
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
