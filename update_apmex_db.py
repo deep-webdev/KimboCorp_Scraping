@@ -85,7 +85,7 @@ def apmex(url):
     try:
         apmex_data['Metal Content'] = soup.find("ul",{"class":"product-table left"}).get_text().split("Metal Content: ")[1].strip()
         content = convert_to_float(apmex_data['Metal Content'].split()[0])
-        apmex_data['Weight'] = str(int(float(apmex_data['Metal Content'].split('troy')[0].strip()) * 31.103)) + " " + "grams"
+        apmex_data['Weight'] = str(round(float(content * 31.103),2)) + " " + "grams"
     except:
         apmex_data['Metal Content'] = None
         apmex_data['Weight'] = None
@@ -115,8 +115,8 @@ def apmex(url):
     
     if(data):
         try:
-            my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s WHERE Product_Id=%s ;""";
-            record = [apmex_data['Price'], apmex_data['Crypto Price'], apmex_data['CC/PayPal Price'], apmex_data['Stock'],apmex_data['Premium'],apmex_data['Product Id']]
+            my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s,Weight=%s WHERE Product_Id=%s ;""";
+            record = [apmex_data['Price'], apmex_data['Crypto Price'], apmex_data['CC/PayPal Price'], apmex_data['Stock'],apmex_data['Premium'],apmex_data['Weight'],apmex_data['Product Id']]
             cursor.execute(my_query, record)
             connection.commit()
             cursor.close()

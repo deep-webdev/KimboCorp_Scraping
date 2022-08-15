@@ -8,6 +8,19 @@ def get_cursor():
     if connection.is_connected():
         cursor = connection.cursor()
         return (connection,cursor)
+    
+def convert_to_float(frac_str):
+    try:
+        return float(frac_str)
+    except ValueError:
+        num, denom = frac_str.split('/')
+        try:
+            leading, num = num.split(' ')
+            whole = float(leading)
+        except ValueError:
+            whole = 0
+        frac = float(num) / float(denom)
+        return whole - frac if whole < 0 else whole + frac
 
 def update_data():
     print("in bulilionstar...")
@@ -44,12 +57,13 @@ def update_data():
             cursor.execute("SELECT * FROM gold_data WHERE Product_Id=" + i['Id']);
             data = cursor.fetchall()
         except Exception as e:
-            print(e)    
-        
+            print(e)
+        if 'troy' in i['Weight'].split():
+            i['Weight'] = str(int((convert_to_float(i['Weight'].split()[0]) * 31.103))) + " grams"
         if(data):
             try:
-                my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s WHERE Product_Id=%s ;""";
-                record = [i['Price'], i['Crypto Price'], i['CC/PayPal Price'], i['Status'],i['Premium'],i['Id']]
+                my_query = """UPDATE gold_data SET Price=%s,Crypto_Price=%s,CC_PayPal_Price=%s,Stock=%s,Premium=%s,Weight=%s WHERE Product_Id=%s ;""";
+                record = [i['Price'], i['Crypto Price'], i['CC/PayPal Price'], i['Status'],i['Premium'],i['Weight'],i['Id']]
                 cursor.execute(my_query, record)
                 connection.commit()
             except Exception as e:
